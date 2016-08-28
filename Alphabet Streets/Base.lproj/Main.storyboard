@@ -18,14 +18,29 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" mapType="satellite" rotateEnabled="NO" pitchEnabled="NO" showsBuildings="NO" showsPointsOfInterest="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3yn-Uf-koS">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" mapType="standard" zoomEnabled="NO" rotateEnabled="NO" pitchEnabled="NO" showsBuildings="NO" showsPointsOfInterest="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3yn-Uf-koS">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vNq-1j-hGo">
+                                <rect key="frame" x="323" y="615" width="32" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="32" id="0RK-VQ-eP4"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="32" id="OUh-hP-M5I"/>
+                                    <constraint firstAttribute="height" constant="32" id="Rxa-dh-d5S"/>
+                                    <constraint firstAttribute="width" constant="32" id="hu5-hj-PQn"/>
+                                </constraints>
+                                <state key="normal" image="location.png"/>
+                                <connections>
+                                    <action selector="homeButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="g7C-dj-Jvu"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="3yn-Uf-koS" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="EuB-YI-mrc"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="3yn-Uf-koS" secondAttribute="bottom" id="HIx-XL-Nfc"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="vNq-1j-hGo" secondAttribute="bottom" constant="20" id="M5u-1k-Amn"/>
+                            <constraint firstItem="vNq-1j-hGo" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="PaA-c5-5HN"/>
                             <constraint firstAttribute="trailingMargin" secondItem="3yn-Uf-koS" secondAttribute="trailing" constant="-20" id="bva-Gq-9LT"/>
                             <constraint firstItem="3yn-Uf-koS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="eWC-AT-fb3"/>
                         </constraints>
@@ -37,7 +52,10 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="564.5" y="490.5"/>
+            <point key="canvasLocation" x="442.5" y="441.5"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="location.png" width="64" height="64"/>
+    </resources>
 </document>

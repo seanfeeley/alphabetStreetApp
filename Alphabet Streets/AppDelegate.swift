@@ -8,8 +8,8 @@
  */
 
 import UIKit
-
 import Parse
+
 
 // If you want to use any of the UI components, uncomment this line
 // import ParseUI
@@ -29,9 +29,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Parse.enableLocalDatastore()
         
         let parseConfiguration = ParseClientConfiguration(block: { (ParseMutableClientConfiguration) -> Void in
-            ParseMutableClientConfiguration.applicationId = "alphabetstreet912910291290131193823"
-            ParseMutableClientConfiguration.clientKey = "usdhquqhu3ye3842382uwiqu2wu2qjsw2"
-            ParseMutableClientConfiguration.server = "https://alphabetstreet.herokuapp.com/parse"
+            
+            
+            
+//            ParseMutableClientConfiguration.applicationId = "alphabetstreet912910291290131193823"
+//            ParseMutableClientConfiguration.clientKey = "usdhquqhu3ye3842382uwiqu2wu2qjsw2"
+//            ParseMutableClientConfiguration.server = "https://alphabetstreet.herokuapp.com/parse"
+            
+            
+            ParseMutableClientConfiguration.applicationId = "fwefewfwfgeqfejqifqirquifwqifdq"
+            ParseMutableClientConfiguration.clientKey = "qfioewhcihwciuewkcjeafdcmhsd"
+            ParseMutableClientConfiguration.server = "https://alphabetstreet2.herokuapp.com/parse"
+            
+            
         })
         
         Parse.initializeWithConfiguration(parseConfiguration)
@@ -53,8 +63,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // If you would like all objects to be private by default, remove this line.
         defaultACL.publicReadAccess = true
+        defaultACL.publicWriteAccess = true
+        
         
         PFACL.setDefaultACL(defaultACL, withAccessForCurrentUser: true)
+        
         
         if application.applicationState != UIApplicationState.Background {
             // Track an app open here if we launch with a push, unless
@@ -107,8 +120,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
         let installation = PFInstallation.currentInstallation()
-        installation.setDeviceTokenFromData(deviceToken)
-        installation.saveInBackground()
+        installation!.setDeviceTokenFromData(deviceToken)
+        installation!.saveInBackground()
         
         PFPush.subscribeToChannelInBackground("") { (succeeded: Bool, error: NSError?) in
             if succeeded {

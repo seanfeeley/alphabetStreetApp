@@ -45,6 +45,10 @@
 		569ACCB01D445C0500B11BA2 /* x.png in Resources */ = {isa = PBXBuildFile; fileRef = 569ACC971D445C0500B11BA2 /* x.png */; };
 		569ACCB11D445C0500B11BA2 /* y.png in Resources */ = {isa = PBXBuildFile; fileRef = 569ACC981D445C0500B11BA2 /* y.png */; };
 		569ACCB21D445C0500B11BA2 /* z.png in Resources */ = {isa = PBXBuildFile; fileRef = 569ACC991D445C0500B11BA2 /* z.png */; };
+		56EC91541D734D130037414B /* placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 56EC91531D734D130037414B /* placeholder.png */; };
+		56EC91561D734EF80037414B /* location.png in Resources */ = {isa = PBXBuildFile; fileRef = 56EC91551D734EF80037414B /* location.png */; };
+		56F1AB101D71EA2E00453E3D /* ParseLiveQuery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56F1AB0F1D71EA2E00453E3D /* ParseLiveQuery.framework */; };
+		8108E9AC264AB734E6CE7950 /* Pods_Alphabet_Streets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72C275FF4A32FE8A3F640B99 /* Pods_Alphabet_Streets.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -88,6 +92,12 @@
 		569ACC971D445C0500B11BA2 /* x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = x.png; sourceTree = "<group>"; };
 		569ACC981D445C0500B11BA2 /* y.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = y.png; sourceTree = "<group>"; };
 		569ACC991D445C0500B11BA2 /* z.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = z.png; sourceTree = "<group>"; };
+		56EC91531D734D130037414B /* placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = placeholder.png; path = ../placeholder.png; sourceTree = "<group>"; };
+		56EC91551D734EF80037414B /* location.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = location.png; sourceTree = "<group>"; };
+		56F1AB0F1D71EA2E00453E3D /* ParseLiveQuery.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseLiveQuery.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Alphabet_Streets-anoqobpyrsyeaaesbkswbvacxabw/Build/Products/Debug-iphonesimulator/ParseLiveQuery/ParseLiveQuery.framework"; sourceTree = "<group>"; };
+		72C275FF4A32FE8A3F640B99 /* Pods_Alphabet_Streets.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Alphabet_Streets.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D2CA06F3829D92A7B096E5C /* Pods-Alphabet Streets.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Alphabet Streets.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Alphabet Streets/Pods-Alphabet Streets.debug.xcconfig"; sourceTree = "<group>"; };
+		B61E32BD87DE6FE683E1F1BE /* Pods-Alphabet Streets.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Alphabet Streets.release.xcconfig"; path = "Pods/Target Support Files/Pods-Alphabet Streets/Pods-Alphabet Streets.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +105,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8108E9AC264AB734E6CE7950 /* Pods_Alphabet_Streets.framework in Frameworks */,
+				56F1AB101D71EA2E00453E3D /* ParseLiveQuery.framework in Frameworks */,
 				569ACC491D3C2CCB00B11BA2 /* AudioToolbox.framework in Frameworks */,
 				569ACC471D3C2CB200B11BA2 /* libstdc++.6.tbd in Frameworks */,
 				569ACC451D3C2C5800B11BA2 /* libsqlite3.tbd in Frameworks */,
@@ -108,6 +120,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1DEB587BEB9E5B1C5DDA0DB2 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				8D2CA06F3829D92A7B096E5C /* Pods-Alphabet Streets.debug.xcconfig */,
+				B61E32BD87DE6FE683E1F1BE /* Pods-Alphabet Streets.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		569ACC0D1D3C1F0100B11BA2 = {
 			isa = PBXGroup;
 			children = (
@@ -115,6 +136,7 @@
 				569ACC2B1D3C1FF600B11BA2 /* CoreLocation.framework */,
 				569ACC181D3C1F0100B11BA2 /* Alphabet Streets */,
 				569ACC171D3C1F0100B11BA2 /* Products */,
+				1DEB587BEB9E5B1C5DDA0DB2 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -143,12 +165,14 @@
 		569ACC3B1D3C296600B11BA2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				56F1AB0F1D71EA2E00453E3D /* ParseLiveQuery.framework */,
 				569ACC481D3C2CCB00B11BA2 /* AudioToolbox.framework */,
 				569ACC461D3C2CB200B11BA2 /* libstdc++.6.tbd */,
 				569ACC431D3C2C4E00B11BA2 /* SystemConfiguration.framework */,
 				569ACC401D3C2C0900B11BA2 /* libsqlite3.tbd */,
 				569ACC3C1D3C29C000B11BA2 /* Bolts.framework */,
 				569ACC3D1D3C29C000B11BA2 /* Parse.framework */,
+				72C275FF4A32FE8A3F640B99 /* Pods_Alphabet_Streets.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -156,6 +180,8 @@
 		569ACC4A1D3C58BF00B11BA2 /* alphabetImages */ = {
 			isa = PBXGroup;
 			children = (
+				56EC91551D734EF80037414B /* location.png */,
+				56EC91531D734D130037414B /* placeholder.png */,
 				569ACC811D445C0500B11BA2 /* b.png */,
 				569ACC821D445C0500B11BA2 /* c.png */,
 				569ACC831D445C0500B11BA2 /* d.png */,
@@ -193,9 +219,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 569ACC281D3C1F0100B11BA2 /* Build configuration list for PBXNativeTarget "Alphabet Streets" */;
 			buildPhases = (
+				EAE9D84BDBDF40183488EE54 /* [CP] Check Pods Manifest.lock */,
 				569ACC121D3C1F0100B11BA2 /* Sources */,
 				569ACC131D3C1F0100B11BA2 /* Frameworks */,
 				569ACC141D3C1F0100B11BA2 /* Resources */,
+				214974E98958497BDB400E5F /* [CP] Embed Pods Frameworks */,
+				52D0E86AE0410900A25CE8FC /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -218,6 +247,7 @@
 				TargetAttributes = {
 					569ACC151D3C1F0100B11BA2 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = JP9XH6K684;
 					};
 				};
 			};
@@ -256,7 +286,9 @@
 				569ACC4E1D3C618C00B11BA2 /* a.png in Resources */,
 				569ACCA51D445C0500B11BA2 /* m.png in Resources */,
 				569ACCA31D445C0500B11BA2 /* k.png in Resources */,
+				56EC91561D734EF80037414B /* location.png in Resources */,
 				569ACCB21D445C0500B11BA2 /* z.png in Resources */,
+				56EC91541D734D130037414B /* placeholder.png in Resources */,
 				569ACCA41D445C0500B11BA2 /* l.png in Resources */,
 				569ACC9E1D445C0500B11BA2 /* f.png in Resources */,
 				569ACCAB1D445C0500B11BA2 /* s.png in Resources */,
@@ -277,6 +309,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		214974E98958497BDB400E5F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Alphabet Streets/Pods-Alphabet Streets-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		52D0E86AE0410900A25CE8FC /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Alphabet Streets/Pods-Alphabet Streets-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EAE9D84BDBDF40183488EE54 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		569ACC121D3C1F0100B11BA2 /* Sources */ = {
@@ -395,31 +475,43 @@
 		};
 		569ACC291D3C1F0100B11BA2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8D2CA06F3829D92A7B096E5C /* Pods-Alphabet Streets.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos/ParseLiveQuery",
 				);
 				INFOPLIST_FILE = "Alphabet Streets/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sean-feeley.Alphabet-Streets";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		569ACC2A1D3C1F0100B11BA2 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B61E32BD87DE6FE683E1F1BE /* Pods-Alphabet Streets.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos/ParseLiveQuery",
 				);
 				INFOPLIST_FILE = "Alphabet Streets/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sean-feeley.Alphabet-Streets";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
