@@ -28,7 +28,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     var location:CLLocation? = nil
     var subscription: Subscription<PFObject>?
     
-    
+    var newPointsLoadedIn:Bool = false
     
     var locationManager = CLLocationManager()
     
@@ -38,13 +38,13 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         centerMap()
         registerListeners()
-        loadInPoints()
+//        loadInPoints()
 //
         let movePointsTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(ViewController.moveAnnotations), userInfo: nil, repeats: true)
-        let loadPointsTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(ViewController.loadAnnotations), userInfo: nil, repeats: true)
+//        let loadPointsTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(ViewController.loadAnnotations), userInfo: nil, repeats: true)
         
         
-//        let addPointsTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(ViewController.loadNewPoints), userInfo: nil, repeats: true)
+//        let addPointsTimer = NSTimer.scheduledTimerWithTimeInterval(10, target: self, selector: #selector(ViewController.loadNewPoints), userInfo: nil, repeats: true)
 //        self.loadNewPoints()
     }
     
@@ -61,10 +61,15 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
     }
     func loadAnnotations(){
-        self.map.addAnnotations(self.points_to_add as! [MKAnnotation])
-        self.points_to_add=[]
-        self.map.removeAnnotations(self.points_to_remove as! [MKAnnotation])
-        self.points_to_remove=[]
+        if newPointsLoadedIn{
+            print(self.points_to_add.count,self.points_to_remove.count)
+            self.map.addAnnotations(self.points_to_add as! [MKAnnotation])
+            self.points_to_add=[]
+            self.map.removeAnnotations(self.points_to_remove as! [MKAnnotation])
+            self.points_to_remove=[]
+            self.newPointsLoadedIn=false
+        }
+
 
     }
     
@@ -72,13 +77,14 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     @IBAction func homeButton(sender: AnyObject) {
         
         recenterMap()
+        loadInPoints()
         
         
     }
     
     func loadNewPoints(){
         print("LOAD IN NEWBIES")
-        for a in (0...10000){
+        for a in (0...100){
             let lat=arc4random_uniform(8000000)
             let lon=arc4random_uniform(12000000)
             let latitude = 50+Float(lat)/1000000.0
@@ -133,6 +139,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             self.location = locations[locations.count-1]
 
             recenterMap()
+            loadInPoints()
         }
         
         
@@ -158,9 +165,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     func loadInPoints(){
-       
         
-       
+        
+        self.newPointsLoadedIn=false
         if draggingPoint != nil{
             return
         }
@@ -191,11 +198,11 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         query.whereKey("longitude", lessThan: neCoord.longitude + lonDiff)
         query.whereKey("longitude", greaterThan: swCoord.longitude - lonDiff)
         query.limit = 1000
-        
+        print(neCoord.latitude + latDiff,swCoord.latitude - latDiff, neCoord.longitude + lonDiff,swCoord.longitude - lonDiff)
         query.findObjectsInBackgroundWithBlock { (objects, error) -> Void in
             
             if error == nil {
-                
+                print("Query found \(objects?.count) objects")
                 for object in objects!{
                     let objectId: String=object.objectId! as String
                     
@@ -209,7 +216,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                     
                     
                 }
-                
+                self.map.removeAnnotations(self.points_to_remove as! [MKAnnotation])
                
                 
             } else {
@@ -225,7 +232,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
        
        uploadPoints()
-        
+       self.newPointsLoadedIn=true
+       
        
         
     }
@@ -351,7 +359,23 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         annotation.objectId=objectId
         annotation.coordinate = location
         
-        self.points_to_add.insertObject(annotation, atIndex: 0)
+        
+//        var contains:Bool=false
+//        for a in self.points_to_add{
+//            if a.objectId == annotation.objectId{
+//                contains=true
+//            }
+//        }
+//        if contains == false{
+//            self.points_to_add.addObject(annotation)
+//        }
+//        else{
+//            self.points_to_add.addObject(annotation)
+//
+//        }
+                    self.map.addAnnotation(annotation)
+        
+
         return annotation
     }
     
@@ -441,11 +465,13 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                         
                         print(error)
                     } else if let prefObj = prefObj{
-                        
-                        prefObj["latitude"] = self.draggingPoint!.coordinate.latitude
-                        prefObj["longitude"] = self.draggingPoint!.coordinate.longitude
-                        prefObj.saveEventually()
-                        self.draggingPoint = nil
+                        if self.draggingPoint != nil{
+                            prefObj["latitude"] = self.draggingPoint!.coordinate.latitude
+                            prefObj["longitude"] = self.draggingPoint!.coordinate.longitude
+                            prefObj.saveEventually()
+                            self.draggingPoint = nil
+                        }
+                      
                         
                         
                         
@@ -487,7 +513,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
-        
+      
         
         if !(annotation is CustomPointAnnotation) {
             return nil
@@ -527,7 +553,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 pixels=32
 
             }
-            
+          
             
             
             anView!.image = resizeImage(image!,newWidth: pixels)
