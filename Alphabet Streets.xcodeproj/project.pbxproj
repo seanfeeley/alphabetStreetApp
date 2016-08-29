@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5618990C1D7497AD00A307DD /* hover.png in Resources */ = {isa = PBXBuildFile; fileRef = 5618990B1D7497AD00A307DD /* hover.png */; };
 		569ACC1A1D3C1F0100B11BA2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569ACC191D3C1F0100B11BA2 /* AppDelegate.swift */; };
 		569ACC1C1D3C1F0100B11BA2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569ACC1B1D3C1F0100B11BA2 /* ViewController.swift */; };
 		569ACC1F1D3C1F0100B11BA2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 569ACC1D1D3C1F0100B11BA2 /* Main.storyboard */; };
@@ -52,6 +53,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5618990B1D7497AD00A307DD /* hover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hover.png; sourceTree = "<group>"; };
 		569ACC161D3C1F0100B11BA2 /* Alphabet Streets.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Alphabet Streets.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		569ACC191D3C1F0100B11BA2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		569ACC1B1D3C1F0100B11BA2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -180,6 +182,7 @@
 		569ACC4A1D3C58BF00B11BA2 /* alphabetImages */ = {
 			isa = PBXGroup;
 			children = (
+				5618990B1D7497AD00A307DD /* hover.png */,
 				56EC91551D734EF80037414B /* location.png */,
 				56EC91531D734D130037414B /* placeholder.png */,
 				569ACC811D445C0500B11BA2 /* b.png */,
@@ -274,6 +277,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5618990C1D7497AD00A307DD /* hover.png in Resources */,
 				569ACCA01D445C0500B11BA2 /* h.png in Resources */,
 				569ACCA91D445C0500B11BA2 /* q.png in Resources */,
 				569ACC241D3C1F0100B11BA2 /* LaunchScreen.storyboard in Resources */,

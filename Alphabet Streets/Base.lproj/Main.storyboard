@@ -45,6 +45,7 @@
                             <constraint firstItem="3yn-Uf-koS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="eWC-AT-fb3"/>
                         </constraints>
                     </view>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
                         <outlet property="map" destination="3yn-Uf-koS" id="MiE-TF-YOS"/>
