@@ -49,6 +49,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     var points_to_move: NSMutableArray = []
     var points_to_add: NSMutableArray = []
     var points_to_upload: NSMutableArray = []
+    var touchPoint:CGPoint? = nil
+    
+    
+    var drapPanTimer:NSTimer? = nil
+    var dragPanLat=0.0
+    var dragPanLon=0.0
     
     var location:CLLocation? = nil
     var subscription: Subscription<PFObject>?
@@ -138,6 +144,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     
     @IBAction func homeButton(sender: AnyObject) {
+        self.drapPanTimer?.invalidate()
+        print(self.drapPanTimer)
         self.loadingPointsIn=false
         recenterMap()
         loadInPoints()
@@ -305,6 +313,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         
     }
+    
+    
+    
     func registerListeners(){
         let uiplgr = UILongPressGestureRecognizer(target: self, action: Selector("action:"))
         //
@@ -482,9 +493,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         
         
-        let touchPoint = gestureRecognizer.locationInView(self.map)
+        self.touchPoint = gestureRecognizer.locationInView(self.map)
         
-        let newCoord: CLLocationCoordinate2D = map.convertPoint(touchPoint,toCoordinateFromView: self.map)
+        let newCoord: CLLocationCoordinate2D = map.convertPoint(self.touchPoint!,toCoordinateFromView: self.map)
         let newLocation: CLLocation = CLLocation(latitude: newCoord.latitude, longitude: newCoord.longitude)
         
         //        createPoint(newCoord.latitude as Double,longitude: newCoord.longitude as Double)
@@ -492,6 +503,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         
         if gestureRecognizer.state == UIGestureRecognizerState.Began {
+            self.drapPanTimer?.invalidate()
             var closest:MKAnnotation? = nil
             var closestDist:CLLocationDistance? = nil
             
@@ -555,8 +567,58 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 self.hoverPoint?.coordinate=newCoord
                 
                 
+                
+                    var toPan = false
+                    let right = UIScreen.mainScreen().bounds.width - self.touchPoint!.x
+                    let moveRight = 0.002 - right/100000
+                    if moveRight > 0{
+                        self.dragPanLon = Double(moveRight)
+                        toPan = true
+                    }
+                    let left = self.touchPoint!.x
+                    let moveLeft = 0.002 - left/100000
+                    if moveLeft > 0{
+                        self.dragPanLon = Double(-moveLeft)
+                        toPan = true
+                    }
+                
+                let top = self.touchPoint!.y
+                
+                let moveTop = 0.002 - top/100000
+                if moveTop > 0{
+                    self.dragPanLat = Double(moveTop)
+                    toPan = true
+                }
+                let bottom = UIScreen.mainScreen().bounds.height - self.touchPoint!.y
+               
+                let moveBottom = 0.002 - bottom/100000
+                if moveBottom > 0{
+                    self.dragPanLat = Double(-moveBottom)
+                    toPan = true
+                }
+                
+                
+                if toPan{
+                    if self.drapPanTimer == nil || self.drapPanTimer?.valid == false{
+                        self.drapPanTimer = NSTimer.scheduledTimerWithTimeInterval(0.01, target: self, selector: #selector(ViewController.dragPan), userInfo: nil, repeats: true)
+                        
+                    }
+                }
+                else{
+                    self.drapPanTimer?.invalidate()
+
+                }
+
+                
+                
+
+                
+                
+                
+                
             }
             else if draggingMapPoint != nil{
+                self.drapPanTimer?.invalidate()
                 let center = map.centerCoordinate
                 let newCenter = CLLocation(latitude: center.latitude-(newLocation.coordinate.latitude-draggingMapPoint!.coordinate.latitude), longitude: center.longitude-(newLocation.coordinate.longitude-draggingMapPoint!.coordinate.longitude))
                 map.setCenterCoordinate(newCenter.coordinate, animated: false)
@@ -566,9 +628,11 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             }
             
         }else if gestureRecognizer.state == UIGestureRecognizerState.Ended {
+            self.drapPanTimer?.invalidate()
+            
             if draggingPoint != nil{
                 
-                let oid = draggingPoint!.objectId
+         
                 
                 
                 UIView.animateWithDuration(0.1, delay: 0, options: UIViewAnimationOptions.TransitionNone, animations: { () -> Void in
@@ -591,6 +655,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 
             }
             else{
+                self.drapPanTimer?.invalidate()
                 //                loadInPoints()
                 draggingMapPoint = nil
             }
@@ -601,7 +666,13 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     
     
-    
+    func dragPan(){
+        
+        
+        self.map.region.center.latitude=self.map.region.center.latitude+self.dragPanLat
+        self.map.region.center.longitude=self.map.region.center.longitude+self.dragPanLon
+        
+    }
     
     
     
