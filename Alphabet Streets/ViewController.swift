@@ -16,24 +16,19 @@ import ParseLiveQuery
 
 
 import SystemConfiguration
-
-public class Reachability {
-    class func isConnectedToNetwork() -> Bool {
-        var zeroAddress = sockaddr_in()
-        zeroAddress.sin_len = UInt8(sizeofValue(zeroAddress))
-        zeroAddress.sin_family = sa_family_t(AF_INET)
-        let defaultRouteReachability = withUnsafePointer(&zeroAddress) {
-            SCNetworkReachabilityCreateWithAddress(nil, UnsafePointer($0))
-        }
-        var flags = SCNetworkReachabilityFlags()
-        if !SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) {
-            return false
-        }
-        let isReachable = (flags.rawValue & UInt32(kSCNetworkFlagsReachable)) != 0
-        let needsConnection = (flags.rawValue & UInt32(kSCNetworkFlagsConnectionRequired)) != 0
-        return (isReachable && !needsConnection)
-    }
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
 }
+
 
 
 class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
@@ -52,7 +47,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     var touchPoint:CGPoint? = nil
     
     
-    var drapPanTimer:NSTimer? = nil
+    var drapPanTimer:Timer? = nil
     var dragPanLat=0.0
     var dragPanLon=0.0
     
@@ -80,9 +75,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         
         
-        let movePointsTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(ViewController.moveAnnotations), userInfo: nil, repeats: true)
-        let loadPointsTimer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: #selector(ViewController.loadAnnotations), userInfo: nil, repeats: true)
-        let uploadPointsTimer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(ViewController.uploadAnnotations), userInfo: nil, repeats: true)
+        let movePointsTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(ViewController.moveAnnotations), userInfo: nil, repeats: true)
+        let loadPointsTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(ViewController.loadAnnotations), userInfo: nil, repeats: true)
+        let uploadPointsTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(ViewController.uploadAnnotations), userInfo: nil, repeats: true)
         
         
         //        let addPointsTimer = NSTimer.scheduledTimerWithTimeInterval(10, target: self, selector: #selector(ViewController.loadNewPoints), userInfo: nil, repeats: true)
@@ -97,8 +92,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 
                 self.uploadingPoints=true
                 for object in self.points_to_upload{
-                    self.uploadAnnotation(object)
-                    self.points_to_upload.removeObject(object)
+                    self.uploadAnnotation(dic: object as! Dictionary<Int, String>)
+                    self.points_to_upload.remove(object)
                     
                 }
                 self.uploadingPoints=false
@@ -118,7 +113,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
             for object in self.points_to_move{
                 self.moveAnnotation(object as! PFObject)
-                self.points_to_move.removeObject(object)
+                self.points_to_move.remove(object)
                 
             }
         
@@ -143,7 +138,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     
-    @IBAction func homeButton(sender: AnyObject) {
+    @IBAction func homeButton(_ sender: AnyObject) {
         self.drapPanTimer?.invalidate()
         print(self.drapPanTimer)
         self.loadingPointsIn=false
@@ -203,7 +198,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         
     }
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
         
         
         if self.location == nil {
@@ -253,7 +248,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             
             self.points_to_remove=[]
             for a in self.map.annotations{
-                self.points_to_remove.addObject(a)
+                self.points_to_remove.add(a)
             }
             
             
@@ -272,7 +267,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             query.whereKey("longitude", greaterThan: swCoord.longitude - lonDiff)
             query.limit = 1000
             //        print(neCoord.latitude + latDiff,swCoord.latitude - latDiff, neCoord.longitude + lonDiff,swCoord.longitude - lonDiff)
-            query.findObjectsInBackgroundWithBlock { (objects, error) -> Void in
+            query.findObjectsInBackground { (objects, error) -> Void in
                 print("entering")
                 self.newPointsLoadedIn=false
                 
@@ -285,7 +280,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                         let a = self.addAnnotation(object)
                         
                         if a != nil{
-                            self.points_to_remove.removeObject(a!)
+                            self.points_to_remove.remove(a!)
                             
                         }
                         
@@ -299,12 +294,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 print("exiting")
             }
             
-            self.subscription = query.subscribe().handle(Event.Updated) { _, object in
-                
-                self.points_to_move.addObject(object)
-                
-                
-            }
+            //self.subscription = query.subscribe().handle(Event.Updated) { _, object in
+            //
+            //    self.points_to_move.addObject(object)
+            //
+            //
+            //}
             
             //       uploadPoints()
             self.loadingPointsIn=false
@@ -317,25 +312,27 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     
     func registerListeners(){
-        let uiplgr = UILongPressGestureRecognizer(target: self, action: Selector("action:"))
+        let uiplgr = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.action(_:)))
         //
         uiplgr.minimumPressDuration = 0.05
         //
         map.addGestureRecognizer(uiplgr)
         
     }
-    func createPoint(latitude: Float, longitude: Float){
+    func createPoint(_ latitude: Float, longitude: Float){
         let o = PFObject(className: "Letters")
+        
+        print(o)
         o["latitude"] = latitude
         o["longitude"] = longitude
         
         o.saveInBackground()
     }
     
-    func uploadAnnotation(dic: AnyObject){
+    func uploadAnnotation(dic: Dictionary<Int, String>){
         let query = PFQuery(className: "Letters")
         query.whereKey("objectId", equalTo: dic[0])
-        query.findObjectsInBackgroundWithBlock { (
+        query.findObjectsInBackground { (
             objects, error) in
             let prefObj = objects![0]
             prefObj["latitude"] = dic[1]
@@ -356,7 +353,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
     }
     
-    func moveAnnotation(dic: PFObject){
+    func moveAnnotation(_ dic: PFObject){
         
         let objectId: String=dic.objectId! as String
         
@@ -365,7 +362,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             //            print("  ",ca.objectId)
             
             if ca.objectId == objectId{
-                UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.TransitionNone, animations: { () -> Void in
+                UIView.animate(withDuration: 0.5, delay: 0, options: UIViewAnimationOptions(), animations: { () -> Void in
                     ca.coordinate.longitude=dic["longitude"] as! CLLocationDegrees
                     ca.coordinate.latitude=dic["latitude"] as! CLLocationDegrees
                     }, completion: { (finished: Bool) -> Void in
@@ -375,9 +372,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
     }
     
-    func addAnnotation(dic: PFObject) -> MKAnnotation?{
+    func addAnnotation(_ dic: PFObject) -> MKAnnotation?{
         var letter="a"
-        let letterset = NSCharacterSet.controlCharacterSet()
+        let letterset = CharacterSet.controlCharacters
         let objectId: String=dic.objectId! as String
         
         
@@ -411,41 +408,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             for char in objectId.utf8{
                 bytes = bytes + String(char)
             }
-            let allLetters: [String] = ["a","a","a","a","a",
-                                        "b","b",
-                                        "c","c",
-                                        "d","d","d","d",
-                                        "e","e","e","e","e",
-                                        "f","f",
-                                        "g","g","g",
-                                        "h","h",
-                                        "i","i","i","i","i",
-                                        "j","j",
-                                        "k","k",
-                                        "l","l","l","l",
-                                        "m","m",
-                                        "n","n","n","n","n",
-                                        "o","o","o","o","o",
-                                        "p","p",
-                                        "q",
-                                        "r","r","r","r","r",
-                                        "s","s","s","s",
-                                        "t","t","t","t","t",
-                                        "u","u","u","u",
-                                        "v","v",
-                                        "w","w",
-                                        "x","x",
-                                        "y","y",
-                                        "z", "z",
-                                        ]
-            
-            let u = UInt32(bytes.substringToIndex(bytes.startIndex.advancedBy(4)))!
-            srand(u)
-            let index:Int = Int(rand()%Int32(allLetters.count))
             
             
-            letter=allLetters[index]
             
+            
+            
+            letter="letter_16_00"
             
             return addAnnotation(dic["latitude"] as! CLLocationDegrees, longitude: dic["longitude"] as! CLLocationDegrees, letter: letter, objectId: objectId)
         }
@@ -453,7 +421,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     
-    func addAnnotation(latitude: CLLocationDegrees, longitude: CLLocationDegrees, letter: String, objectId: String) -> MKAnnotation?{
+    func addAnnotation(_ latitude: CLLocationDegrees, longitude: CLLocationDegrees, letter: String, objectId: String) -> MKAnnotation?{
         let latitude: CLLocationDegrees = latitude
         let longitude: CLLocationDegrees = longitude
         
@@ -466,12 +434,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         var contains:Bool=false
         for a in self.points_to_add{
-            if a.objectId == annotation.objectId{
+            if (a as AnyObject).objectId == annotation.objectId{
                 contains=true
             }
         }
         if contains == false{
-            self.points_to_add.addObject(annotation)
+            self.points_to_add.add(annotation)
         }
         else{
             //            self.points_to_add.addObject(annotation)
@@ -487,29 +455,29 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     
     
-    func action(gestureRecognizer: UIGestureRecognizer) -> Bool{
+    func action(_ gestureRecognizer: UIGestureRecognizer) -> Bool{
         //        print(self.map.annotations)
         //
         
         
         
-        self.touchPoint = gestureRecognizer.locationInView(self.map)
+        self.touchPoint = gestureRecognizer.location(in: self.map)
         
-        let newCoord: CLLocationCoordinate2D = map.convertPoint(self.touchPoint!,toCoordinateFromView: self.map)
+        let newCoord: CLLocationCoordinate2D = map.convert(self.touchPoint!,toCoordinateFrom: self.map)
         let newLocation: CLLocation = CLLocation(latitude: newCoord.latitude, longitude: newCoord.longitude)
         
         //        createPoint(newCoord.latitude as Double,longitude: newCoord.longitude as Double)
         //        return true
         
         
-        if gestureRecognizer.state == UIGestureRecognizerState.Began {
+        if gestureRecognizer.state == UIGestureRecognizerState.began {
             self.drapPanTimer?.invalidate()
             var closest:MKAnnotation? = nil
             var closestDist:CLLocationDistance? = nil
             
             for annotation in self.map.annotations{
                 let otherLocation: CLLocation = CLLocation(latitude: annotation.coordinate.latitude, longitude: annotation.coordinate.longitude)
-                let meters = newLocation.distanceFromLocation(otherLocation)
+                let meters = newLocation.distance(from: otherLocation)
                 if closestDist==nil || meters < closestDist{
                     closest=annotation
                     closestDist=meters
@@ -521,10 +489,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             
             var detectable:CLLocationDistance = 1000
             
-            if UIDevice.currentDevice().model=="iPhone"{
+            if UIDevice.current.model=="iPhone"{
                 detectable=1000
             }
-            else if UIDevice.currentDevice().model=="iPad"{
+            else if UIDevice.current.model=="iPad"{
                 detectable=500
             }
             else{
@@ -535,7 +503,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             
             if closestDist < detectable && closest != nil {
                 draggingPoint = closest as! CustomPointAnnotation
-                UIView.animateWithDuration(0.1, delay: 0, options: UIViewAnimationOptions.TransitionNone, animations: { () -> Void in
+                UIView.animate(withDuration: 0.1, delay: 0, options: UIViewAnimationOptions(), animations: { () -> Void in
                     self.draggingPoint!.coordinate.latitude = newCoord.latitude+0.01
                     self.draggingPoint!.coordinate.longitude = newCoord.longitude
                     }, completion: { (finished: Bool) -> Void in
@@ -554,11 +522,11 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             
             
         }
-        else if gestureRecognizer.state == UIGestureRecognizerState.Changed {
+        else if gestureRecognizer.state == UIGestureRecognizerState.changed {
             
             if draggingPoint != nil{
                 
-                UIView.animateWithDuration(0.1, delay: 0, options: UIViewAnimationOptions.TransitionNone, animations: { () -> Void in
+                UIView.animate(withDuration: 0.1, delay: 0, options: UIViewAnimationOptions(), animations: { () -> Void in
                     self.draggingPoint!.coordinate.latitude = newCoord.latitude+0.01
                     self.draggingPoint!.coordinate.longitude = newCoord.longitude
                     }, completion: { (finished: Bool) -> Void in
@@ -569,7 +537,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 
                 
                     var toPan = false
-                    let right = UIScreen.mainScreen().bounds.width - self.touchPoint!.x
+                    let right = UIScreen.main.bounds.width - self.touchPoint!.x
                     let moveRight = 0.002 - right/100000
                     if moveRight > 0{
                         self.dragPanLon = Double(moveRight)
@@ -589,7 +557,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                     self.dragPanLat = Double(moveTop)
                     toPan = true
                 }
-                let bottom = UIScreen.mainScreen().bounds.height - self.touchPoint!.y
+                let bottom = UIScreen.main.bounds.height - self.touchPoint!.y
                
                 let moveBottom = 0.002 - bottom/100000
                 if moveBottom > 0{
@@ -599,8 +567,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 
                 
                 if toPan{
-                    if self.drapPanTimer == nil || self.drapPanTimer?.valid == false{
-                        self.drapPanTimer = NSTimer.scheduledTimerWithTimeInterval(0.01, target: self, selector: #selector(ViewController.dragPan), userInfo: nil, repeats: true)
+                    if self.drapPanTimer == nil || self.drapPanTimer?.isValid == false{
+                        self.drapPanTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(ViewController.dragPan), userInfo: nil, repeats: true)
                         
                     }
                 }
@@ -621,13 +589,13 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 self.drapPanTimer?.invalidate()
                 let center = map.centerCoordinate
                 let newCenter = CLLocation(latitude: center.latitude-(newLocation.coordinate.latitude-draggingMapPoint!.coordinate.latitude), longitude: center.longitude-(newLocation.coordinate.longitude-draggingMapPoint!.coordinate.longitude))
-                map.setCenterCoordinate(newCenter.coordinate, animated: false)
+                map.setCenter(newCenter.coordinate, animated: false)
                 
                 
                 
             }
             
-        }else if gestureRecognizer.state == UIGestureRecognizerState.Ended {
+        }else if gestureRecognizer.state == UIGestureRecognizerState.ended {
             self.drapPanTimer?.invalidate()
             
             if draggingPoint != nil{
@@ -635,18 +603,18 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
          
                 
                 
-                UIView.animateWithDuration(0.1, delay: 0, options: UIViewAnimationOptions.TransitionNone, animations: { () -> Void in
+                UIView.animate(withDuration: 0.1, delay: 0, options: UIViewAnimationOptions(), animations: { () -> Void in
                     self.draggingPoint!.coordinate = newCoord
                     }, completion: { (finished: Bool) -> Void in
                 })
                 draggingPoint!.coordinate = newCoord
-                let uploadList = [draggingPoint!.objectId,draggingPoint!.coordinate.latitude,draggingPoint!.coordinate.longitude]
+                let uploadList = [draggingPoint!.objectId,draggingPoint!.coordinate.latitude,draggingPoint!.coordinate.longitude] as [Any]
                 self.map.removeAnnotation(self.hoverPoint!)
                 self.hoverPoint=nil
                 self.draggingPoint = nil
                 
                 
-                self.points_to_upload.addObject(uploadList)
+                self.points_to_upload.add(uploadList)
                 
                 
                 
@@ -676,24 +644,24 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     
     
-    func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage {
+    func resizeImage(_ image: UIImage, newWidth: CGFloat) -> UIImage {
         
         let scale = newWidth / image.size.width
         let newHeight = image.size.height * scale
-        UIGraphicsBeginImageContext(CGSizeMake(newWidth, newHeight))
-        image.drawInRect(CGRectMake(0, 0, newWidth, newHeight))
+        UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
+        image.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        return newImage
+        return newImage!
     }
     
     
-    func mapView(mapView: MKMapView, regionDidChangeAnimated animated: Bool){
+    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool){
         
         let locationNow=CLLocation(latitude:  self.map.region.center.latitude,longitude:  self.map.region.center.longitude)
         
-        if self.centerPointAtLastPointLoad != nil && locationNow.distanceFromLocation(self.centerPointAtLastPointLoad!) > 10000{
+        if self.centerPointAtLastPointLoad != nil && locationNow.distance(from: self.centerPointAtLastPointLoad!) > 10000{
             self.loadInPoints()
         }
         
@@ -702,7 +670,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         
         
         if !(annotation is CustomPointAnnotation) {
@@ -713,10 +681,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         
     }
-    func getAnViewForAnnotation(mapView: MKMapView, annotation: MKAnnotation) -> MKAnnotationView {
+    func getAnViewForAnnotation(_ mapView: MKMapView, annotation: MKAnnotation) -> MKAnnotationView {
         let reuseId = "test"
         
-        var anView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId)
+        var anView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId)
         
         if anView == nil {
             anView = MKAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
@@ -731,17 +699,17 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         //the view is dequeued or created...
         
         let cpa = annotation as! CustomPointAnnotation
-        let image=UIImage(named:"\(cpa.letter.lowercaseString).png")
+        let image=UIImage(named:"\(cpa.letter.lowercased()).png")
         if image != nil{
             
             
             
             var pixels:CGFloat = 64.0
-            if UIDevice.currentDevice().model=="iPhone"{
+            if UIDevice.current.model=="iPhone"{
                 
                 pixels=32
             }
-            else if UIDevice.currentDevice().model=="iPad"{
+            else if UIDevice.current.model=="iPad"{
                 pixels=50
             }
             else{
@@ -756,7 +724,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             
         }
         else{
-            print(cpa.letter.lowercaseString)
+            print(cpa.letter.lowercased())
         }
         
         
