@@ -1,0 +1,6 @@
+framework module Pods_Alphabet_Streets {
+  umbrella header "Pods-Alphabet Streets-umbrella.h"
+
+  export *
+  module * { export * }
+}
