@@ -92,7 +92,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 
                 self.uploadingPoints=true
                 for object in self.points_to_upload{
-                    self.uploadAnnotation(dic: object as! Dictionary<Int, String>)
+                    self.uploadAnnotation(obj: object as! Array<Any>)
                     self.points_to_upload.remove(object)
                     
                 }
@@ -252,7 +252,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             }
             
             
-            let query = PFQuery(className: "Letters")
+            let query = PFQuery(className: "ActiveLetters")
             let mRect = self.map.visibleMapRect;
             let neMapPoint = MKMapPointMake(MKMapRectGetMaxX(mRect), mRect.origin.y);
             let swMapPoint = MKMapPointMake(mRect.origin.x, MKMapRectGetMaxY(mRect));
@@ -320,7 +320,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
     }
     func createPoint(_ latitude: Float, longitude: Float){
-        let o = PFObject(className: "Letters")
+        let o = PFObject(className: "ActiveLetters")
         
         print(o)
         o["latitude"] = latitude
@@ -329,14 +329,14 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         o.saveInBackground()
     }
     
-    func uploadAnnotation(dic: Dictionary<Int, String>){
-        let query = PFQuery(className: "Letters")
-        query.whereKey("objectId", equalTo: dic[0])
+    func uploadAnnotation(obj: Array<Any>){
+        let query = PFQuery(className: "ActiveLetters")
+        query.whereKey("objectId", equalTo: obj[0])
         query.findObjectsInBackground { (
             objects, error) in
             let prefObj = objects![0]
-            prefObj["latitude"] = dic[1]
-            prefObj["longitude"] = dic[2]
+            prefObj["latitude"] = obj[1]
+            prefObj["longitude"] = obj[2]
             prefObj.saveEventually()
         }
         
