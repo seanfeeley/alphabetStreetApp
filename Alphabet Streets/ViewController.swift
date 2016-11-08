@@ -92,45 +92,89 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 //        //
 //        uiplgr.minimumPressDuration = 0.05
 //        //
-//        map.addGestureRecognizer(uiplgr)
+        //        map.addGestureRecognizer(uiplgr)
         let uizgr = UIPinchGestureRecognizer(target: self, action: #selector(ViewController.pinchRecognizer(_:)))
         uizgr.delegate=self
+        let uizpr = UIPanGestureRecognizer(target: self, action: #selector(ViewController.panRecognizer(_:)))
+        uizpr.delegate=self
+        
         
         map.addGestureRecognizer(uizgr)
+        map.addGestureRecognizer(uizpr)
     }
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool{
         return true
     }
     func pinchRecognizer(_ gestureRecognizer: UIPinchGestureRecognizer) -> Bool{
-        self.refreshVisibleAnnotations()
+        
+        self.refreshAnnotationResolutions()
+        if self.map.annotations.count==0{
+            self.placeLetterAnnotations()
+        }
         return true
     }
     
-
+    func panRecognizer(_ gestureRecognizer: UIPinchGestureRecognizer) -> Bool{
+        self.locationHasChanged()
+        return true
+    }
+    
+    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool){
+        self.locationHasChanged()
+    }
     
     
-    func refreshVisibleAnnotations(){
-        let all_annotaions = self.map.annotations
-        let visible_rect = self.map.visibleMapRect
-        var annotations_to_refresh: [MKAnnotation] = []
-        for annotation in all_annotaions{
-            if MKMapRectContainsPoint(visible_rect, MKMapPointForCoordinate(annotation.coordinate)){
-                annotations_to_refresh.append(annotation)
+    func locationHasChanged(){
+        let locationNow=CLLocation(latitude:  self.map.region.center.latitude,longitude:  self.map.region.center.longitude)
+        if self.centerPointAtLastPointLoad != nil{
+            
+            if locationNow.distance(from: self.centerPointAtLastPointLoad!) > METERS_BETWEEN_LOADS{
+                self.placeLetterAnnotations()
             }
         }
-        self.map.removeAnnotations(annotations_to_refresh)
-        self.map.addAnnotations(annotations_to_refresh)
+        else if self.centerPointAtLastPointLoad == nil{
+            self.centerPointAtLastPointLoad = CLLocation(latitude:  self.map.region.center.latitude,longitude:  self.map.region.center.longitude)
+        }
+
+        
     }
+    
+    func refreshAnnotationResolutions(){
+        if (self.letterAnnotationLoader?.areLettersStillVisible())!{
+            
+            self.refreshVisibleAnnotationResolutions()
+        }
+        else{
+            self.map.removeAnnotations(self.map.annotations)
+        }
+    }
+    
+   
+    func refreshVisibleAnnotationResolutions(){
+        
+        let all_annotaions = self.map.annotations
+        let visible_rect = self.map.visibleMapRect
+        var annotations_to_refresh: [LetterAnnotation] = []
+        var annotations_to_remove: [LetterAnnotation] = []
+        for annotation in all_annotaions{
+            if MKMapRectContainsPoint(visible_rect, MKMapPointForCoordinate(annotation.coordinate)){
+                annotations_to_refresh.append(LetterAnnotation(other: annotation as! LetterAnnotation))
+                annotations_to_remove.append(annotation as! LetterAnnotation)
+            }
+        }
+        self.map.addAnnotations(annotations_to_refresh)
+        self.map.removeAnnotations(annotations_to_remove)
+    }
+    
+    
     
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
-        self.placeLetterAnnotations()
-        
+                
         if self.currentUserLocation == nil {
             self.currentUserLocation = locations[locations.count-1]
             centerMapToUserLocation()
-            //            loadInPoints()
         }
         
     }
@@ -147,8 +191,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     func centerMapToUserLocation(){
         
         
-        let latDelta: CLLocationDegrees = 0.01
-        let lonDelta: CLLocationDegrees = 0.01
+        let latDelta: CLLocationDegrees = ZOOM_DISTANCE
+        let lonDelta: CLLocationDegrees = ZOOM_DISTANCE
         
         let span:MKCoordinateSpan = MKCoordinateSpanMake(latDelta, lonDelta)
         
@@ -166,38 +210,23 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         map.setRegion(region, animated: false)
         
         
-        
+        self.placeLetterAnnotations()
     }
     
     
    
         
-    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool){
-         self.refreshVisibleAnnotations()
-        
-        
-        let locationNow=CLLocation(latitude:  self.map.region.center.latitude,longitude:  self.map.region.center.longitude)
-        if self.centerPointAtLastPointLoad != nil{
-            
-            if locationNow.distance(from: self.centerPointAtLastPointLoad!) > 1000{
-            
-            self.placeLetterAnnotations()
-            }
-        }
-        else if self.centerPointAtLastPointLoad == nil{
-            self.centerPointAtLastPointLoad = CLLocation(latitude:  self.map.region.center.latitude,longitude:  self.map.region.center.longitude)
-        }
-
-
-        
-    }
+  
     
     
     func placeLetterAnnotations(){
+        if (self.letterAnnotationLoader?.areLettersStillVisible())!{
         self.centerPointAtLastPointLoad = CLLocation(latitude:  self.map.region.center.latitude,longitude:  self.map.region.center.longitude)
-        //self.map.removeAnnotations(self.map.annotations)
-        letterAnnotationLoader?.placeAutoGeneratedLetters()
         
+        let oldAnnotations = self.map.annotations
+        letterAnnotationLoader?.placeAutoGeneratedLetters()
+        self.map.removeAnnotations(oldAnnotations)
+        }
     }
     
     
@@ -207,7 +236,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         // Dispose of any resources that can be recreated.
     }
     
-    
+
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let letterAnnotation: LetterAnnotation = annotation as! LetterAnnotation

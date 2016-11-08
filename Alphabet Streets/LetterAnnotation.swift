@@ -16,7 +16,8 @@ class LetterAnnotation: MKPointAnnotation {
     var letterFile: Int!
     var objectId: String = "xxxxxx"
     var image: UIImage = UIImage()
-    let zoomFactor: CGFloat = 30
+    let zoomFactor: CGFloat = LETTER_WIDTH
+    
     
     var toUpdate: Bool = false
     
@@ -26,6 +27,14 @@ class LetterAnnotation: MKPointAnnotation {
         self.letterId = 0
         self.letterFile = 16
         
+    }
+    init(other:LetterAnnotation){
+        super.init()
+        self.coordinate = other.coordinate
+        self.letterId = other.letterId
+        self.letterFile = other.letterFile
+        self.objectId = other.objectId
+        self.image = other.image
     }
     
     
@@ -45,9 +54,9 @@ class LetterAnnotation: MKPointAnnotation {
         }
         let newWidth:CGFloat = self.getLetterWidth(mapView: mapView)
         self.setImageFile(width: newWidth)
-        anView!.image = self.getResizedImage(newWidth: self.getLetterWidth(mapView: mapView))
-            
+        anView!.image = self.getResizedImage(newWidth: newWidth)
         
+        anView!.alpha=self.getLetterOpacity(width: newWidth)
 
         return anView!
     }
@@ -58,25 +67,28 @@ class LetterAnnotation: MKPointAnnotation {
         
     }
     
+    
     func setLetterFileResolution(width: CGFloat){
         self.letterFile = 16
+        
+        let resized = width/1
       
-        if width < 16.0{
+        if resized < 16.0{
             self.letterFile = 16
         }
-        else if width < 32.0{
+        else if resized < 32.0{
             self.letterFile = 32
         }
-        else if width < 64.0{
+        else if resized < 64.0{
             self.letterFile = 64
         }
-        else if width < 128.0{
+        else if resized < 128.0{
             self.letterFile = 128
         }
-        else if width < 256.0{
+        else if resized < 256.0{
             self.letterFile = 256
         }
-        else if width < 512.0{
+        else if resized < 512.0{
             self.letterFile = 512
         }
         else {
@@ -99,22 +111,17 @@ class LetterAnnotation: MKPointAnnotation {
         //}
         //else{
         //    pixels=32
-        //}
+        //}z
         
-        pixels=pixels/self.getZoomLevel(mapView: mapView)
+        pixels=pixels/getZoomLevel(mapView: mapView)
         return pixels
         
         
     }
     
-    func getZoomLevel(mapView: MKMapView) -> CGFloat{
-        let MERCATOR_RADIUS:CGFloat = 85445659.44705395
-        let longitudeDelta: CLLocationDegrees = mapView.region.span.longitudeDelta
-        let mapWidthInPixels: CGFloat = mapView.bounds.size.width
-        let zoomScale: CGFloat = CGFloat(longitudeDelta) * MERCATOR_RADIUS * CGFloat(M_PI) / (180.0 * mapWidthInPixels);
-        let zoom: CGFloat = zoomScale/self.zoomFactor
-        return zoom
-    }
+    
+    
+
     
     
     func getResizedImage(newWidth: CGFloat) -> UIImage {
@@ -128,4 +135,24 @@ class LetterAnnotation: MKPointAnnotation {
         return newImage!
     }
     
+    
+    func getLetterOpacity(width: CGFloat) -> CGFloat{
+        
+        var opacity: CGFloat = 1
+        
+        if width <= LETTER_OPACITY_FLOOR
+        {
+            opacity = 0
+        }
+        else if width >= LETTER_OPACITY_CEIL
+        {
+            opacity = 1
+        }
+        else
+        {
+            opacity = (width - LETTER_OPACITY_FLOOR)/(LETTER_OPACITY_CEIL - LETTER_OPACITY_FLOOR)
+        }
+        return opacity
+        
+    }
 }
