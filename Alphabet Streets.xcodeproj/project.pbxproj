@@ -724,8 +724,9 @@
 				TargetAttributes = {
 					569ACC151D3C1F0100B11BA2 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = JP9XH6K684;
+						DevelopmentTeam = F3JKYFHGZ7;
 						LastSwiftMigration = 0810;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -1125,12 +1126,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = F3JKYFHGZ7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/build/Debug-iphoneos/ParseLiveQuery",
 				);
 				INFOPLIST_FILE = "Alphabet Streets/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sean-feeley.Alphabet-Streets";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1148,12 +1151,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = F3JKYFHGZ7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/build/Debug-iphoneos/ParseLiveQuery",
 				);
 				INFOPLIST_FILE = "Alphabet Streets/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sean-feeley.Alphabet-Streets";
 				PRODUCT_NAME = "$(TARGET_NAME)";

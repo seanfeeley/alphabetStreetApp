@@ -46,37 +46,74 @@ class LetterAnnotationLoader {
     
     func getGridOfCoords() -> NSMutableArray{
         var coords:NSMutableArray=[]
+//        let startingTopLeft: CLLocationCoordinate2D = self.getMapTopLeftStartingCoordinate()
         let topLeft: CLLocationCoordinate2D = self.getMapTopLeftCoordinate()
         let bottomRight: CLLocationCoordinate2D = self.getMapBottomRightCoordinate()
-
+        
+        
+        
         var coord_to_add: CLLocationCoordinate2D = topLeft
 
-        while coord_to_add.latitude < bottomRight.latitude{
+        
+        while coord_to_add.latitude > bottomRight.latitude{
             coord_to_add.longitude = topLeft.longitude
-            coord_to_add.latitude = coord_to_add.latitude + LETTER_DENSITY
+            coord_to_add.latitude = self.getNextUnEqualLatitude(coord: coord_to_add)
             
-            while coord_to_add.longitude > bottomRight.longitude{
-                coord_to_add.longitude = coord_to_add.longitude - LETTER_DENSITY
-               
-                coords.add(coord_to_add)
+            while coord_to_add.longitude < bottomRight.longitude{
+                coord_to_add.longitude = self.getNextUnEqualLongitude(coord: coord_to_add)
+                
+                if coord_to_add.latitude < topLeft.latitude && coord_to_add.longitude > topLeft.longitude{
+                    print(coord_to_add)
+                    coords.add(coord_to_add)
+                }
+                
+                
             }
             
         }
         
-        print(coords.count)
         return coords
     }
+    func getNextUnEqualLatitude(coord: CLLocationCoordinate2D) -> CLLocationDegrees{
+        let latitude: CLLocationDegrees = coord.latitude
+        
+        return latitude - CLLocationDegrees(LETTER_DENSITY)
+    }
+    func getNextUnEqualLongitude(coord: CLLocationCoordinate2D) -> CLLocationDegrees{
+        let longitude: CLLocationDegrees = coord.longitude
+        
+        return longitude + CLLocationDegrees(LETTER_DENSITY)
+    }
+    
+    
+    func getNextEqualLatitude(coord: CLLocationCoordinate2D) -> CLLocationDegrees{
+        var xyPoint: CGPoint = self.map.convert(coord, toPointTo: self.map.inputView)
+        xyPoint.y = xyPoint.y + self.getLetterDensity()
+        let newLocation = self.map.convert(xyPoint, toCoordinateFrom: self.map.inputView)
+        return newLocation.latitude
+    }
+    func getNextEqualLongitude(coord: CLLocationCoordinate2D) -> CLLocationDegrees{
+        var xyPoint: CGPoint = self.map.convert(coord, toPointTo: self.map.inputView)
+        xyPoint.x = xyPoint.x + self.getLetterDensity()
+        let newLocation = self.map.convert(xyPoint, toCoordinateFrom: self.map.inputView)
+        return newLocation.longitude
+    }
+    func getLetterDensity() -> CGFloat
+    {
+        return LETTER_DENSITY / CGFloat(getZoomLevel(mapView: self.map))
+    }
+    
+  
     
     func getMapTopLeftCoordinate() -> CLLocationCoordinate2D{
-        let lat:CLLocationDegrees = CLLocationDegrees(round(RESOLUTION*(self.map.region.center.latitude - self.map.region.span.latitudeDelta))/RESOLUTION)
-        let lon:CLLocationDegrees = CLLocationDegrees(round(RESOLUTION*(self.map.region.center.longitude + self.map.region.span.longitudeDelta))/RESOLUTION)
+        let lat:CLLocationDegrees = CLLocationDegrees(round(RESOLUTION*(self.map.region.center.latitude + self.map.region.span.latitudeDelta))/RESOLUTION)
+        let lon:CLLocationDegrees = CLLocationDegrees(round(RESOLUTION*(self.map.region.center.longitude - self.map.region.span.longitudeDelta))/RESOLUTION)
         let coord: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: lat, longitude: lon)
-       
         return coord
     }
     func getMapBottomRightCoordinate() -> CLLocationCoordinate2D{
-        let lat:CLLocationDegrees = CLLocationDegrees(round(RESOLUTION*(self.map.region.center.latitude + self.map.region.span.latitudeDelta))/RESOLUTION)
-        let lon:CLLocationDegrees = CLLocationDegrees(round(RESOLUTION*(self.map.region.center.longitude - self.map.region.span.longitudeDelta))/RESOLUTION)
+        let lat:CLLocationDegrees = CLLocationDegrees(round(RESOLUTION*(self.map.region.center.latitude - self.map.region.span.latitudeDelta))/RESOLUTION)
+        let lon:CLLocationDegrees = CLLocationDegrees(round(RESOLUTION*(self.map.region.center.longitude + self.map.region.span.longitudeDelta))/RESOLUTION)
         let coord: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: lat, longitude: lon)
         return coord
     }

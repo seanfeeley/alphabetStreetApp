@@ -26,8 +26,16 @@ class LetterAnnotation: MKPointAnnotation {
         self.coordinate=coord
         self.letterId = 0
         self.letterFile = 16
+        self.generateObjectId()
         
     }
+    func generateObjectId(){
+        self.objectId="\(self.coordinate.latitude)/\(self.coordinate.longitude)"
+        
+        
+    }
+    
+    
     init(other:LetterAnnotation){
         super.init()
         self.coordinate = other.coordinate
@@ -35,17 +43,18 @@ class LetterAnnotation: MKPointAnnotation {
         self.letterFile = other.letterFile
         self.objectId = other.objectId
         self.image = other.image
+        
     }
     
     
     func getView( mapView: MKMapView) -> MKAnnotationView {
         
-        let reuseId = "test"
+       
         
-        var anView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId)
+        var anView = mapView.dequeueReusableAnnotationView(withIdentifier: self.objectId)
         
         if anView == nil {
-            anView = MKAnnotationView(annotation: self, reuseIdentifier: reuseId)
+            anView = MKAnnotationView(annotation: self, reuseIdentifier: self.objectId)
             
             anView!.canShowCallout = true
         }
@@ -139,18 +148,18 @@ class LetterAnnotation: MKPointAnnotation {
     func getLetterOpacity(width: CGFloat) -> CGFloat{
         
         var opacity: CGFloat = 1
-        
+
         if width <= LETTER_OPACITY_FLOOR
         {
-            opacity = 0
+            //opacity = 0
         }
         else if width >= LETTER_OPACITY_CEIL
         {
-            opacity = 1
+            //opacity = 1
         }
         else
         {
-            opacity = (width - LETTER_OPACITY_FLOOR)/(LETTER_OPACITY_CEIL - LETTER_OPACITY_FLOOR)
+            //opacity = (width - LETTER_OPACITY_FLOOR)/(LETTER_OPACITY_CEIL - LETTER_OPACITY_FLOOR)
         }
         return opacity
         
