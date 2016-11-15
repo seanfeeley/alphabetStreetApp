@@ -191,6 +191,7 @@
 		56738F1C1DC944C20022C009 /* letter_1024_24.png in Resources */ = {isa = PBXBuildFile; fileRef = 56738E641DC944C10022C009 /* letter_1024_24.png */; };
 		56738F1D1DC944C20022C009 /* letter_1024_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 56738E651DC944C10022C009 /* letter_1024_25.png */; };
 		56738F1E1DC944C20022C009 /* location.png in Resources */ = {isa = PBXBuildFile; fileRef = 56738E661DC944C10022C009 /* location.png */; };
+		569A53AF1DCBF55700810FAF /* LetterAnnotationLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569A53AE1DCBF55700810FAF /* LetterAnnotationLoader.swift */; };
 		569ACC1A1D3C1F0100B11BA2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569ACC191D3C1F0100B11BA2 /* AppDelegate.swift */; };
 		569ACC1C1D3C1F0100B11BA2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569ACC1B1D3C1F0100B11BA2 /* ViewController.swift */; };
 		569ACC1F1D3C1F0100B11BA2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 569ACC1D1D3C1F0100B11BA2 /* Main.storyboard */; };
@@ -203,6 +204,8 @@
 		569ACC451D3C2C5800B11BA2 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 569ACC401D3C2C0900B11BA2 /* libsqlite3.tbd */; };
 		569ACC471D3C2CB200B11BA2 /* libstdc++.6.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 569ACC461D3C2CB200B11BA2 /* libstdc++.6.tbd */; };
 		569ACC491D3C2CCB00B11BA2 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 569ACC481D3C2CCB00B11BA2 /* AudioToolbox.framework */; };
+		56B05A011DCBE66F0026BF9D /* LetterAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B05A001DCBE66F0026BF9D /* LetterAnnotation.swift */; };
+		56B730CD1DD12C4B008905E9 /* settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B730CC1DD12C4B008905E9 /* settings.swift */; };
 		56F1AB101D71EA2E00453E3D /* ParseLiveQuery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56F1AB0F1D71EA2E00453E3D /* ParseLiveQuery.framework */; };
 		8108E9AC264AB734E6CE7950 /* Pods_Alphabet_Streets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72C275FF4A32FE8A3F640B99 /* Pods_Alphabet_Streets.framework */; };
 /* End PBXBuildFile section */
@@ -392,6 +395,7 @@
 		56738E641DC944C10022C009 /* letter_1024_24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = letter_1024_24.png; sourceTree = "<group>"; };
 		56738E651DC944C10022C009 /* letter_1024_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = letter_1024_25.png; sourceTree = "<group>"; };
 		56738E661DC944C10022C009 /* location.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = location.png; sourceTree = "<group>"; };
+		569A53AE1DCBF55700810FAF /* LetterAnnotationLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LetterAnnotationLoader.swift; sourceTree = "<group>"; };
 		569ACC161D3C1F0100B11BA2 /* Alphabet Streets.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Alphabet Streets.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		569ACC191D3C1F0100B11BA2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		569ACC1B1D3C1F0100B11BA2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -406,6 +410,8 @@
 		569ACC431D3C2C4E00B11BA2 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		569ACC461D3C2CB200B11BA2 /* libstdc++.6.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.tbd"; path = "usr/lib/libstdc++.6.tbd"; sourceTree = SDKROOT; };
 		569ACC481D3C2CCB00B11BA2 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		56B05A001DCBE66F0026BF9D /* LetterAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LetterAnnotation.swift; sourceTree = "<group>"; };
+		56B730CC1DD12C4B008905E9 /* settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = settings.swift; sourceTree = "<group>"; };
 		56F1AB0F1D71EA2E00453E3D /* ParseLiveQuery.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ParseLiveQuery.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Alphabet_Streets-anoqobpyrsyeaaesbkswbvacxabw/Build/Products/Debug-iphonesimulator/ParseLiveQuery/ParseLiveQuery.framework"; sourceTree = "<group>"; };
 		72C275FF4A32FE8A3F640B99 /* Pods_Alphabet_Streets.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Alphabet_Streets.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D2CA06F3829D92A7B096E5C /* Pods-Alphabet Streets.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Alphabet Streets.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Alphabet Streets/Pods-Alphabet Streets.debug.xcconfig"; sourceTree = "<group>"; };
@@ -466,10 +472,13 @@
 				569ACC4A1D3C58BF00B11BA2 /* alphabetImages */,
 				569ACC191D3C1F0100B11BA2 /* AppDelegate.swift */,
 				569ACC1B1D3C1F0100B11BA2 /* ViewController.swift */,
+				569A53AE1DCBF55700810FAF /* LetterAnnotationLoader.swift */,
+				56B730CC1DD12C4B008905E9 /* settings.swift */,
 				569ACC1D1D3C1F0100B11BA2 /* Main.storyboard */,
 				569ACC201D3C1F0100B11BA2 /* Assets.xcassets */,
 				569ACC221D3C1F0100B11BA2 /* LaunchScreen.storyboard */,
 				569ACC251D3C1F0100B11BA2 /* Info.plist */,
+				56B05A001DCBE66F0026BF9D /* LetterAnnotation.swift */,
 			);
 			path = "Alphabet Streets";
 			sourceTree = "<group>";
@@ -715,8 +724,9 @@
 				TargetAttributes = {
 					569ACC151D3C1F0100B11BA2 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = JP9XH6K684;
+						DevelopmentTeam = F3JKYFHGZ7;
 						LastSwiftMigration = 0810;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -989,7 +999,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				569ACC1C1D3C1F0100B11BA2 /* ViewController.swift in Sources */,
+				569A53AF1DCBF55700810FAF /* LetterAnnotationLoader.swift in Sources */,
 				569ACC1A1D3C1F0100B11BA2 /* AppDelegate.swift in Sources */,
+				56B05A011DCBE66F0026BF9D /* LetterAnnotation.swift in Sources */,
+				56B730CD1DD12C4B008905E9 /* settings.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1113,12 +1126,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = F3JKYFHGZ7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/build/Debug-iphoneos/ParseLiveQuery",
 				);
 				INFOPLIST_FILE = "Alphabet Streets/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sean-feeley.Alphabet-Streets";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1136,12 +1151,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = F3JKYFHGZ7;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/build/Debug-iphoneos/ParseLiveQuery",
 				);
 				INFOPLIST_FILE = "Alphabet Streets/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sean-feeley.Alphabet-Streets";
 				PRODUCT_NAME = "$(TARGET_NAME)";
