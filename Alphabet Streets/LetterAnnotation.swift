@@ -12,7 +12,7 @@ import MapKit
 
 
 class LetterAnnotation: MKPointAnnotation {
-    var letterId: Int!
+    var letterId: UInt32!
     var letterFile: Int!
     var objectId: String = "xxxxxx"
     var image: UIImage = UIImage()
@@ -24,9 +24,10 @@ class LetterAnnotation: MKPointAnnotation {
     init(coord: CLLocationCoordinate2D) {
         super.init()
         self.coordinate=coord
-        self.letterId = 0
-        self.letterFile = 16
         self.generateObjectId()
+        self.generateRandomLetter()
+        self.generateRandomCoordShift()
+        self.letterFile = 16
         
     }
     func generateObjectId(){
@@ -35,6 +36,38 @@ class LetterAnnotation: MKPointAnnotation {
         
     }
     
+    func generateRandomLetter(){
+        
+        srand48(self.getRandomSeed())
+        self.letterId = UInt32( drand48() * 26 )
+    }
+    
+    func generateRandomCoordShift(){
+        
+        srand48(self.getRandomSeed())
+        let latShift: CLLocationDegrees = CLLocationDegrees ( drand48() * Double(LETTER_DENSITY)/2)
+        let lonShift: CLLocationDegrees = CLLocationDegrees ( drand48() * Double(LETTER_DENSITY)/2)
+        self.coordinate.latitude = self.coordinate.latitude - CLLocationDegrees(LETTER_DENSITY)/4 + latShift
+        self.coordinate.longitude = self.coordinate.longitude - CLLocationDegrees(LETTER_DENSITY)/4 + lonShift
+        
+        
+    }
+
+    
+    func getRandomSeed() -> Int {
+        let i: Int = reverseNumber(number:self.objectId.hashValue)
+        return i
+    }
+    
+    func reverseNumber(number:Int) -> Int{
+        let absNumber:Int = abs(number)
+        var absNumberStr:String = String(absNumber)
+        let absNumberStrReverse:String = String(absNumberStr.characters.reversed().dropLast(4))
+       
+        let absNumberReverse:Int = Int(absNumberStrReverse)!
+        return absNumberReverse
+    }
+
     
     init(other:LetterAnnotation){
         super.init()

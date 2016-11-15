@@ -63,7 +63,7 @@ class LetterAnnotationLoader {
                 coord_to_add.longitude = self.getNextUnEqualLongitude(coord: coord_to_add)
                 
                 if coord_to_add.latitude < topLeft.latitude && coord_to_add.longitude > topLeft.longitude{
-                    print(coord_to_add)
+                    
                     coords.add(coord_to_add)
                 }
                 
