@@ -10,15 +10,13 @@ import Foundation
 
 import MapKit
 
-
 class LetterAnnotation: MKPointAnnotation {
+    
     var letterId: UInt32!
     var letterFile: Int!
     var objectId: String = "xxxxxx"
     var image: UIImage = UIImage()
     let zoomFactor: CGFloat = LETTER_WIDTH
-    
-    
     var toUpdate: Bool = false
     
     init(coord: CLLocationCoordinate2D) {
@@ -30,6 +28,106 @@ class LetterAnnotation: MKPointAnnotation {
         self.letterFile = 16
         
     }
+    
+    init(other:LetterAnnotation){
+        super.init()
+        self.coordinate = other.coordinate
+        self.letterId = other.letterId
+        self.letterFile = other.letterFile
+        self.objectId = other.objectId
+        self.image = other.image
+        
+    }
+    
+    func getView( mapView: MKMapView) -> MKAnnotationView {
+        
+        
+        
+        var anView = mapView.dequeueReusableAnnotationView(withIdentifier: self.objectId)
+        
+        if anView == nil {
+            anView = MKAnnotationView(annotation: self, reuseIdentifier: self.objectId)
+            
+            anView!.canShowCallout = true
+        }
+        else {
+            anView!.annotation = self
+        }
+        let newWidth:CGFloat = self.getLetterWidth(mapView: mapView)
+        self.setImageFile(width: newWidth)
+        anView!.image = self.getResizedImage(newWidth: newWidth)
+        
+        anView!.alpha = self.getLetterOpacity(width: newWidth)
+        anView!.layer.zPosition = self.getZPosiion()
+        return anView!
+    }
+    
+    
+    func getZPosiion() -> CGFloat{
+        return 1
+        
+    }
+    func getLetterWidth( mapView: MKMapView) -> CGFloat{
+        
+        var pixels:CGFloat = 64.0
+        
+        //if UIDevice.current.model=="iPhone"{
+        //
+        //    pixels=32
+        //}
+        //else if UIDevice.current.model=="iPad"{
+        //pixels=50
+        //}
+        //else{
+        //    pixels=32
+        //}z
+        
+        pixels=pixels/getZoomLevel(mapView: mapView)
+        return pixels
+        
+        
+    }
+    
+    func getLetterOpacity(width: CGFloat) -> CGFloat{
+        
+        let opacity: CGFloat = 1
+        
+        if width <= LETTER_OPACITY_FLOOR
+        {
+            //opacity = 0
+        }
+        else if width >= LETTER_OPACITY_CEIL
+        {
+            //opacity = 1
+        }
+        else
+        {
+            //opacity = (width - LETTER_OPACITY_FLOOR)/(LETTER_OPACITY_CEIL - LETTER_OPACITY_FLOOR)
+        }
+        return opacity
+        
+    }
+    
+
+
+    func getResizedImage(newWidth: CGFloat) -> UIImage {
+        
+        let scale = newWidth / image.size.width
+        let newHeight = image.size.height * scale
+        UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
+        image.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage!
+    }
+    
+
+
+
+
+
+    
+
     func generateObjectId(){
         self.objectId="\(self.coordinate.latitude)/\(self.coordinate.longitude)"
         
@@ -69,39 +167,10 @@ class LetterAnnotation: MKPointAnnotation {
     }
 
     
-    init(other:LetterAnnotation){
-        super.init()
-        self.coordinate = other.coordinate
-        self.letterId = other.letterId
-        self.letterFile = other.letterFile
-        self.objectId = other.objectId
-        self.image = other.image
-        
-    }
-    
-    
-    func getView( mapView: MKMapView) -> MKAnnotationView {
-        
-       
-        
-        var anView = mapView.dequeueReusableAnnotationView(withIdentifier: self.objectId)
-        
-        if anView == nil {
-            anView = MKAnnotationView(annotation: self, reuseIdentifier: self.objectId)
-            
-            anView!.canShowCallout = true
-        }
-        else {
-            anView!.annotation = self
-        }
-        let newWidth:CGFloat = self.getLetterWidth(mapView: mapView)
-        self.setImageFile(width: newWidth)
-        anView!.image = self.getResizedImage(newWidth: newWidth)
-        
-        anView!.alpha=self.getLetterOpacity(width: newWidth)
 
-        return anView!
-    }
+    
+    
+
     
     func setImageFile(width: CGFloat){
         self.setLetterFileResolution(width: width)
@@ -140,61 +209,38 @@ class LetterAnnotation: MKPointAnnotation {
             
     }
     
-    func getLetterWidth( mapView: MKMapView) -> CGFloat{
-        
-        var pixels:CGFloat = 64.0
-        
-        //if UIDevice.current.model=="iPhone"{
-        //
-        //    pixels=32
-        //}
-        //else if UIDevice.current.model=="iPad"{
-        //pixels=50
-        //}
-        //else{
-        //    pixels=32
-        //}z
-        
-        pixels=pixels/getZoomLevel(mapView: mapView)
-        return pixels
-        
+
+    
+}
+
+class HoverAnnotation: LetterAnnotation {
+    
+    init(letter: LetterAnnotation){
+        super.init(other: letter)
+        self.objectId = "HOVER "+self.objectId
         
     }
     
-    
-    
-
-    
-    
-    func getResizedImage(newWidth: CGFloat) -> UIImage {
+    override func getZPosiion() -> CGFloat{
+        return 0
         
-        let scale = newWidth / image.size.width
-        let newHeight = image.size.height * scale
-        UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
-        image.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return newImage!
     }
     
-    
-    func getLetterOpacity(width: CGFloat) -> CGFloat{
+    override func setImageFile(width: CGFloat){
+        self.setLetterFileResolution(width: width)
+        self.image = UIImage(named:"hover_letter_\(String(format: "%02d", letterFile))_\(String(format: "%02d", letterId)).png")!
         
-        var opacity: CGFloat = 1
+    }
+    
+    override func getLetterOpacity(width: CGFloat) -> CGFloat{
+        
+        let opacity: CGFloat = 0.3
+        
 
-        if width <= LETTER_OPACITY_FLOOR
-        {
-            //opacity = 0
-        }
-        else if width >= LETTER_OPACITY_CEIL
-        {
-            //opacity = 1
-        }
-        else
-        {
-            //opacity = (width - LETTER_OPACITY_FLOOR)/(LETTER_OPACITY_CEIL - LETTER_OPACITY_FLOOR)
-        }
         return opacity
         
     }
+    
+    
 }
+

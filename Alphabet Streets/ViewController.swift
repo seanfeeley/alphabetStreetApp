@@ -41,6 +41,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     var meterBetweenRefreshesAtLastLoad: CLLocationDegrees? = nil
     var letterAnnotationLoader:LetterAnnotationLoader? =  nil
     var locationManager = CLLocationManager()
+    var selectedLetter: LetterAnnotation? = nil
+    var hoverPoint: HoverAnnotation? = nil
+    
     
 //    var draggingPoint: CustomPointAnnotation? = nil
 //    var hoverPoint: CustomPointAnnotation? = nil
@@ -89,19 +92,20 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     func registerListeners(){
-//        let uiplgr = UILongPressGestureRecognizer(target: self, action: #selector(ViewController.action(_:)))
-//        //
-//        uiplgr.minimumPressDuration = 0.05
-//        //
-        //        map.addGestureRecognizer(uiplgr)
+
         let uizgr = UIPinchGestureRecognizer(target: self, action: #selector(ViewController.pinchRecognizer(_:)))
         uizgr.delegate=self
+        map.addGestureRecognizer(uizgr)
+        
         let uizpr = UIPanGestureRecognizer(target: self, action: #selector(ViewController.panRecognizer(_:)))
         uizpr.delegate=self
-        
-        
-        map.addGestureRecognizer(uizgr)
         map.addGestureRecognizer(uizpr)
+        
+        let uitr = UITapGestureRecognizer(target: self, action: #selector(ViewController.tapRecognizer(_:)))
+        uitr.delegate=self
+        map.addGestureRecognizer(uitr)
+        
+        
     }
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool{
@@ -110,16 +114,113 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     func pinchRecognizer(_ gestureRecognizer: UIPinchGestureRecognizer) -> Bool{
         
         self.refreshAnnotationResolutions()
+        self.stopHovering()
         if self.map.annotations.count==0{
             self.placeLetterAnnotations()
         }
         return true
     }
     
+    func stopHovering(){
+        if(self.hoverPoint != nil){
+            self.dropSelectedLetter(coord: self.hoverPoint!.coordinate)
+        }
+    }
+    
     func panRecognizer(_ gestureRecognizer: UIPinchGestureRecognizer) -> Bool{
         self.locationHasChanged()
         return true
     }
+    
+    func tapRecognizer(_ sender:UITapGestureRecognizer){
+        if sender.state == .ended {
+            
+            let touchLocation: CGPoint = sender.location(in: sender.view)
+            let touchCoord = self.map.convert(touchLocation, toCoordinateFrom: self.map.inputView)
+            if self.selectedLetter == nil{
+                self.setSelectedLetter(coord: touchCoord)
+            }
+            else{
+                self.moveHoverPoint(coord: touchCoord)
+                self.dropSelectedLetter(coord: touchCoord)
+            }
+            
+        }   
+    }
+    
+    func dropHoverPoint(letter: LetterAnnotation){
+        self.removeHoverPoint()
+        self.hoverPoint = HoverAnnotation(letter: letter)
+        self.map.addAnnotation(self.hoverPoint!)
+    }
+    
+    func moveHoverPoint(coord: CLLocationCoordinate2D){
+    
+        UIView.animate(withDuration: 0.2, animations: {
+           self.hoverPoint?.coordinate = coord
+            
+        }, completion: nil)
+        
+    }
+    
+    
+    func removeHoverPoint(){
+        if (self.hoverPoint != nil){
+            self.map.removeAnnotation(self.hoverPoint!)
+        }
+        
+    }
+    
+    func dropSelectedLetter(coord: CLLocationCoordinate2D){
+        UIView.animate(withDuration: 0.2, animations: {
+            self.selectedLetter?.coordinate=coord
+            
+        }, completion: { (completed) in
+            self.selectedLetter = nil
+            self.removeHoverPoint()
+        })
+    }
+    
+    
+    func setSelectedLetter(coord: CLLocationCoordinate2D){
+        let tapLocation: CLLocation = CLLocation(latitude: coord.latitude, longitude: coord.longitude)
+        for annotation in self.map.annotations{
+            let location: CLLocation = CLLocation(latitude: annotation.coordinate.latitude, longitude: annotation.coordinate.longitude)
+            let distance = location.distance(from: tapLocation)
+            if distance < getTapingDistance(){
+                self.selectedLetter = annotation as! LetterAnnotation
+                self.dropHoverPoint(letter: selectedLetter!)
+                self.startHoveringSelectedLetter()
+                return
+            }
+        }
+    }
+    func startHoveringSelectedLetter(){
+        
+        
+        UIView.animate(withDuration: 0.75, animations: {
+            let selectedLetterXY = self.map.convert((self.selectedLetter?.coordinate)!, toPointTo: self.map.inputView)
+            let newSelectedLeterXY = CGPoint(x: selectedLetterXY.x, y: selectedLetterXY.y - getHoverHeight(mapView: self.map))
+            self.selectedLetter?.coordinate=self.map.convert(newSelectedLeterXY, toCoordinateFrom: self.map.inputView)
+            
+        }, completion: { (completed) in
+            
+            if(self.selectedLetter != nil){
+                UIView.animate(withDuration: 0.75, delay: 0, options: [.repeat, .autoreverse], animations: {
+                    let selectedLetterXY = self.map.convert((self.selectedLetter?.coordinate)!, toPointTo: self.map.inputView)
+                    let newSelectedLeterXY = CGPoint(x: selectedLetterXY.x, y: selectedLetterXY.y + getHoverHeight(mapView: self.map)/2)
+                    self.selectedLetter?.coordinate=self.map.convert(newSelectedLeterXY, toCoordinateFrom: self.map.inputView)
+                    
+                    
+                }, completion: nil)
+
+            }
+            
+        })
+        
+    }
+    
+    
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool){
         self.locationHasChanged()
@@ -180,8 +281,11 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         var annotations_to_remove: [LetterAnnotation] = []
         for annotation in all_annotaions{
             if MKMapRectContainsPoint(visible_rect, MKMapPointForCoordinate(annotation.coordinate)){
-                annotations_to_refresh.append(LetterAnnotation(other: annotation as! LetterAnnotation))
-                annotations_to_remove.append(annotation as! LetterAnnotation)
+                if let letter = annotation as? LetterAnnotation{
+                    annotations_to_refresh.append(LetterAnnotation(other: annotation as! LetterAnnotation))
+                    annotations_to_remove.append(letter)
+                }
+
             }
         }
         self.map.addAnnotations(annotations_to_refresh)
@@ -265,15 +369,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         let letterAnnotation: LetterAnnotation = annotation as! LetterAnnotation
         return letterAnnotation.getView(mapView: mapView)
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
     }
     
     

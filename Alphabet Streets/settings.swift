@@ -10,6 +10,7 @@ import Foundation
 import MapKit
 
 let LETTER_WIDTH: CGFloat = 15
+let HOVER_HEIGHT: CGFloat = 75
 let ZOOM_CUT_OFF: CGFloat = 3
 let RESOLUTION: CLLocationDegrees = 1000.0
 let LETTER_DENSITY: CGFloat = CGFloat(RESOLUTION)/1000000
@@ -33,4 +34,14 @@ func getZoomLevel(mapView: MKMapView) -> CGFloat{
 func getMetersBetweenLetterRefreshes(mapView: MKMapView) -> CLLocationDegrees{
 
     return CLLocationDegrees(METERS_BETWEEN_LOADS * getZoomLevel(mapView: mapView))
+}
+
+func getTapingDistance() -> CLLocationDistance{
+    return 25
+}
+
+
+func getHoverHeight(mapView: MKMapView) -> CGFloat{
+    return HOVER_HEIGHT/getZoomLevel(mapView: mapView)
+    
 }
