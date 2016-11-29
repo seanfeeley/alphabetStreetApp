@@ -18,6 +18,7 @@ class LetterAnnotation: MKPointAnnotation {
     var image: UIImage = UIImage()
     let zoomFactor: CGFloat = LETTER_WIDTH
     var toUpdate: Bool = false
+    var isHovering: Bool = false
     
     init(coord: CLLocationCoordinate2D) {
         super.init()

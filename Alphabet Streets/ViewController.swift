@@ -44,6 +44,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     var selectedLetter: LetterAnnotation? = nil
     var hoverPoint: HoverAnnotation? = nil
     
+
     
 //    var draggingPoint: CustomPointAnnotation? = nil
 //    var hoverPoint: CustomPointAnnotation? = nil
@@ -112,9 +113,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         return true
     }
     func pinchRecognizer(_ gestureRecognizer: UIPinchGestureRecognizer) -> Bool{
-        
+
+  
         self.refreshAnnotationResolutions()
-        self.stopHovering()
+//        self.stopHovering()
         if self.map.annotations.count==0{
             self.placeLetterAnnotations()
         }
@@ -172,13 +174,20 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     func dropSelectedLetter(coord: CLLocationCoordinate2D){
+        
+            
+        self.selectedLetter!.getView(mapView: self.map).layer.removeAllAnimations()
         UIView.animate(withDuration: 0.2, animations: {
+            
             self.selectedLetter?.coordinate=coord
             
         }, completion: { (completed) in
+
+            self.selectedLetter?.isHovering = false
             self.selectedLetter = nil
             self.removeHoverPoint()
         })
+        
     }
     
     
@@ -198,25 +207,42 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     func startHoveringSelectedLetter(){
         
         
-        UIView.animate(withDuration: 0.75, animations: {
+        
+        UIView.animate(withDuration: 0.5, animations: {
+            
             let selectedLetterXY = self.map.convert((self.selectedLetter?.coordinate)!, toPointTo: self.map.inputView)
             let newSelectedLeterXY = CGPoint(x: selectedLetterXY.x, y: selectedLetterXY.y - getHoverHeight(mapView: self.map))
             self.selectedLetter?.coordinate=self.map.convert(newSelectedLeterXY, toCoordinateFrom: self.map.inputView)
             
         }, completion: { (completed) in
             
-            if(self.selectedLetter != nil){
-                UIView.animate(withDuration: 0.75, delay: 0, options: [.repeat, .autoreverse], animations: {
-                    let selectedLetterXY = self.map.convert((self.selectedLetter?.coordinate)!, toPointTo: self.map.inputView)
-                    let newSelectedLeterXY = CGPoint(x: selectedLetterXY.x, y: selectedLetterXY.y + getHoverHeight(mapView: self.map)/2)
-                    self.selectedLetter?.coordinate=self.map.convert(newSelectedLeterXY, toCoordinateFrom: self.map.inputView)
-                    
-                    
-                }, completion: nil)
-
-            }
+//            if(self.selectedLetter != nil){
+//                
+//                UIView.animate(withDuration: 0.8, delay: 0, options: [.repeat, .autoreverse], animations: {
+//
+//                    
+//                    
+//                    self.selectedLetter?.isHovering = true
+//                    let selectedLetterXY = self.map.convert((self.selectedLetter?.coordinate)!, toPointTo: self.map.inputView)
+//                    let newSelectedLeterXY = CGPoint(x: selectedLetterXY.x, y: selectedLetterXY.y + getHoverHeight(mapView: self.map)/2)
+//                    self.selectedLetter?.coordinate=self.map.convert(newSelectedLeterXY, toCoordinateFrom: self.map.inputView)
+//                    
+//                    
+//                }, completion: nil)
+//                
+//                
+//            }
+            
             
         })
+
+           
+        
+        
+        
+
+        
+        
         
     }
     
@@ -234,7 +260,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         if self.centerPointAtLastPointLoad != nil{
             let difference:CLLocationDegrees = meters_between_loads - self.meterBetweenRefreshesAtLastLoad!
             if difference > self.meterBetweenRefreshesAtLastLoad! || locationNow.distance(from: self.centerPointAtLastPointLoad!) > meters_between_loads{
-                self.placeLetterAnnotations()
+
+                self.placeLetterAnnotations( )
             }
         
         }
@@ -276,23 +303,44 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     func refreshVisibleAnnotationResolutions(){
         
         let all_annotaions = self.map.annotations
-        let visible_rect = self.map.visibleMapRect
+        var visible_rect = self.map.visibleMapRect
+        visible_rect.origin.x = visible_rect.origin.x - visible_rect.size.width/2
+        visible_rect.origin.y = visible_rect.origin.y - visible_rect.size.height/2
+        visible_rect.size.height=visible_rect.size.height*2
+        visible_rect.size.width=visible_rect.size.width*2
         var annotations_to_refresh: [LetterAnnotation] = []
         var annotations_to_remove: [LetterAnnotation] = []
         for annotation in all_annotaions{
             if MKMapRectContainsPoint(visible_rect, MKMapPointForCoordinate(annotation.coordinate)){
-                if let letter = annotation as? LetterAnnotation{
-                    annotations_to_refresh.append(LetterAnnotation(other: annotation as! LetterAnnotation))
-                    annotations_to_remove.append(letter)
+                
+                if let letter = annotation as? HoverAnnotation{
+//                    annotations_to_refresh.append(HoverAnnotation(letter: annotation as! LetterAnnotation))
+//                    annotations_to_remove.append(letter)
                 }
-
+                else if let letter = annotation as? LetterAnnotation{
+//                    if self.selectedLetter != nil{
+                        if self.selectedLetter?.objectId != letter.objectId{
+                            annotations_to_refresh.append(LetterAnnotation(other: annotation as! LetterAnnotation))
+                            annotations_to_remove.append(letter)
+                        }
+//                    }
+//                    annotations_to_refresh.append(LetterAnnotation(other: annotation as! LetterAnnotation))
+//                    annotations_to_remove.append(letter)
+                    
+                }
             }
         }
         self.map.addAnnotations(annotations_to_refresh)
         self.map.removeAnnotations(annotations_to_remove)
+        if self.hoverPoint != nil {
+            self.map.removeAnnotation(self.hoverPoint!)
+            self.map.addAnnotation(self.hoverPoint!)
+        }
+        if self.selectedLetter != nil {
+            self.map.removeAnnotation(self.selectedLetter!)
+            self.map.addAnnotation(self.selectedLetter!)
+        }
     }
-    
-    
     
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
@@ -351,7 +399,11 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             
             
         let oldAnnotations = self.map.annotations
-        letterAnnotationLoader?.placeAutoGeneratedLetters()
+        var toIgnore:[LetterAnnotation] = []
+        if self.selectedLetter != nil{
+            toIgnore.append(self.selectedLetter!)
+        }
+        letterAnnotationLoader?.placeAutoGeneratedLetters(toIgnore: toIgnore)
         self.map.removeAnnotations(oldAnnotations)
         }
     }
