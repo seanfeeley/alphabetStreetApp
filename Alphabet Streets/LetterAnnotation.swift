@@ -10,7 +10,8 @@ import Foundation
 
 import MapKit
 
-class LetterAnnotation: MKPointAnnotation {
+
+class LetterAnnotation: MKPointAnnotation{
     
     var letterId: UInt32!
     var letterFile: Int!
@@ -19,6 +20,7 @@ class LetterAnnotation: MKPointAnnotation {
     let zoomFactor: CGFloat = LETTER_WIDTH
     var toUpdate: Bool = false
     var isHovering: Bool = false
+    var z: CGFloat = 0
     
     init(coord: CLLocationCoordinate2D) {
         super.init()
@@ -40,6 +42,25 @@ class LetterAnnotation: MKPointAnnotation {
         
     }
     
+    init(local:LocalLetter){
+        super.init()
+        self.objectId=local.objectId
+        self.coordinate=local.getCoordinate()
+        self.generateRandomLetter()
+    }
+    
+    
+    init(objectId:String){
+        super.init()
+        self.objectId=objectId
+        self.revertCoordinate()
+        self.generateRandomLetter()
+    }
+    
+    
+    
+    
+    
     func getView( mapView: MKMapView) -> MKAnnotationView {
         
         
@@ -59,15 +80,20 @@ class LetterAnnotation: MKPointAnnotation {
         anView!.image = self.getResizedImage(newWidth: newWidth)
         
         anView!.alpha = self.getLetterOpacity(width: newWidth)
-        anView!.layer.zPosition = self.getZPosiion()
+        anView!.layer.zPosition = self.getZPosition()
+
+
+        
         return anView!
     }
     
-    
-    func getZPosiion() -> CGFloat{
-        return 1
-        
+    func getZPosition() -> CGFloat{
+        if self.isHovering == true{
+            return 1
+        }
+        return 0
     }
+
     func getLetterWidth( mapView: MKMapView) -> CGFloat{
         
         var pixels:CGFloat = 64.0
@@ -130,8 +156,19 @@ class LetterAnnotation: MKPointAnnotation {
     
 
     func generateObjectId(){
-        self.objectId="\(self.coordinate.latitude)/\(self.coordinate.longitude)"
+        let shortentedLat=String(format: "%.3f", self.coordinate.latitude)
+        let shortentedLon=String(format: "%.3f", self.coordinate.longitude)
+        self.objectId="\(shortentedLat)/\(shortentedLon)"
         
+        
+    }
+    
+    func revertCoordinate(){
+        let shortentedLat = CLLocationDegrees(self.objectId.components(separatedBy: "/")[0])
+        let shortentedLon = CLLocationDegrees(self.objectId.components(separatedBy: "/")[1])
+        self.coordinate.latitude = shortentedLat!
+        self.coordinate.latitude = shortentedLon!
+        self.generateRandomCoordShift()
         
     }
     
@@ -218,19 +255,18 @@ class HoverAnnotation: LetterAnnotation {
     
     init(letter: LetterAnnotation){
         super.init(other: letter)
-        self.objectId = "HOVER "+self.objectId
-        
     }
     
-    override func getZPosiion() -> CGFloat{
-        return 0
-        
-    }
+
     
     override func setImageFile(width: CGFloat){
         self.setLetterFileResolution(width: width)
         self.image = UIImage(named:"hover_letter_\(String(format: "%02d", letterFile))_\(String(format: "%02d", letterId)).png")!
         
+    }
+    
+    override func getZPosition() -> CGFloat{
+        return 0.5
     }
     
     override func getLetterOpacity(width: CGFloat) -> CGFloat{

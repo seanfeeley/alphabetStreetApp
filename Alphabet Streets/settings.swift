@@ -10,7 +10,7 @@ import Foundation
 import MapKit
 
 let LETTER_WIDTH: CGFloat = 15
-let HOVER_HEIGHT: CGFloat = 75
+let HOVER_HEIGHT: CGFloat = 30
 let ZOOM_CUT_OFF: CGFloat = 3
 let RESOLUTION: CLLocationDegrees = 1000.0
 let LETTER_DENSITY: CGFloat = CGFloat(RESOLUTION)/1000000
@@ -45,3 +45,20 @@ func getHoverHeight(mapView: MKMapView) -> CGFloat{
     return HOVER_HEIGHT/getZoomLevel(mapView: mapView)
     
 }
+
+func getMovementTimeBetweenTwoPoints(coordA: CLLocationCoordinate2D, coordB: CLLocationCoordinate2D) -> Double {
+//    let locA: CLLocation = CLLocation(latitude: coordA.latitude, longitude: coordA.longitude)
+//    let locB: CLLocation = CLLocation(latitude: coordB.latitude, longitude: coordB.longitude)
+//    let distance = locA.distance(from: locB)
+//    let speed: CLLocationSpeed = 1000
+//    let time = distance/speed
+    let speed_limit = 0.2
+//    print(time)
+//    if time < speed_limit{
+        return speed_limit
+//    }
+//    return time
+    
+    
+}
+

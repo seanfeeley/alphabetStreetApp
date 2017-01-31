@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Alphabet Streets/ViewController.swift"
-            timestampString = "502076263.272104"
+            timestampString = "505505334.41687"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
+            startingLineNumber = "96"
+            endingLineNumber = "96"
             landmarkName = "ViewController"
             landmarkType = "3">
          </BreakpointContent>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Alphabet Streets/ViewController.swift"
-            timestampString = "502077928.419678"
+            timestampString = "507592385.864149"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "347"
-            endingLineNumber = "347"
+            startingLineNumber = "415"
+            endingLineNumber = "415"
             landmarkName = "locationManager(_:didUpdateLocations:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Alphabet Streets/LetterAnnotation.swift"
-            timestampString = "501988589.843784"
+            timestampString = "507591040.734058"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "178"
-            endingLineNumber = "178"
+            startingLineNumber = "214"
+            endingLineNumber = "214"
             landmarkName = "setImageFile(width:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Alphabet Streets/ViewController.swift"
-            timestampString = "502076263.272104"
+            timestampString = "505505334.41687"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "97"
-            endingLineNumber = "97"
+            startingLineNumber = "99"
+            endingLineNumber = "99"
             landmarkName = "registerListeners()"
             landmarkType = "7">
          </BreakpointContent>
@@ -186,11 +186,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Alphabet Streets/LetterAnnotation.swift"
-            timestampString = "501988589.843784"
+            timestampString = "507591040.734058"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "141"
-            endingLineNumber = "141"
+            startingLineNumber = "177"
+            endingLineNumber = "177"
             landmarkName = "generateRandomLetter()"
             landmarkType = "7">
          </BreakpointContent>
@@ -202,11 +202,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Alphabet Streets/LetterAnnotation.swift"
-            timestampString = "501988589.843784"
+            timestampString = "507591040.734058"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "166"
-            endingLineNumber = "166"
+            startingLineNumber = "202"
+            endingLineNumber = "202"
             landmarkName = "reverseNumber(number:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -218,12 +218,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Alphabet Streets/ViewController.swift"
-            timestampString = "502076263.272104"
+            timestampString = "505505334.41687"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "201"
-            endingLineNumber = "201"
-            landmarkName = "setSelectedLetter(coord:)"
+            startingLineNumber = "122"
+            endingLineNumber = "122"
+            landmarkName = "pinchRecognizer(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -234,13 +234,61 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Alphabet Streets/ViewController.swift"
-            timestampString = "502076263.272104"
+            timestampString = "507592385.864149"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "118"
-            endingLineNumber = "118"
-            landmarkName = "pinchRecognizer(_:)"
+            startingLineNumber = "386"
+            endingLineNumber = "386"
+            landmarkName = "refreshVisibleAnnotationResolutions()"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Alphabet Streets/ViewController.swift"
+            timestampString = "507592385.864149"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "389"
+            endingLineNumber = "389"
+            landmarkName = "refreshVisibleAnnotationResolutions()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Alphabet Streets/ViewController.swift"
+            timestampString = "507592385.864149"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "264"
+            endingLineNumber = "264"
+            landmarkName = "startHoveringSelectedLetter()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Alphabet Streets/LocalLetterLoader.swift"
+            timestampString = "505690639.782266"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "18"
+            endingLineNumber = "18"
+            landmarkName = "LocalLetter"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
