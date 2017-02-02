@@ -400,7 +400,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 }
             }
         }
-        print(annotations_to_refresh.count,all_hover_annotations.count,all_selected_annotations.count)
+//        print(annotations_to_refresh.count,all_hover_annotations.count,all_selected_annotations.count)
         self.map.addAnnotations(annotations_to_refresh)
         self.map.addAnnotations(all_hover_annotations)
         self.map.addAnnotations(all_selected_annotations)

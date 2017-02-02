@@ -42,10 +42,10 @@ class LetterAnnotation: MKPointAnnotation{
         
     }
     
-    init(local:LocalLetter){
+    init(active: ActiveLetter){
         super.init()
-        self.objectId=local.objectId
-        self.coordinate=local.getCoordinate()
+        self.objectId=active.objectId
+        self.coordinate=active.getCoordinate()
         self.generateRandomLetter()
     }
     

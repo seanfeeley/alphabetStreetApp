@@ -191,7 +191,7 @@
 		56738F1C1DC944C20022C009 /* letter_1024_24.png in Resources */ = {isa = PBXBuildFile; fileRef = 56738E641DC944C10022C009 /* letter_1024_24.png */; };
 		56738F1D1DC944C20022C009 /* letter_1024_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 56738E651DC944C10022C009 /* letter_1024_25.png */; };
 		56738F1E1DC944C20022C009 /* location.png in Resources */ = {isa = PBXBuildFile; fileRef = 56738E661DC944C10022C009 /* location.png */; };
-		5686B2F31DF7840600169657 /* LocalLetterLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5686B2F21DF7840600169657 /* LocalLetterLoader.swift */; };
+		5686B2F31DF7840600169657 /* ActiveLetterLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5686B2F21DF7840600169657 /* ActiveLetterLoader.swift */; };
 		5686B2F51DF784BF00169657 /* RemoteLetterLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5686B2F41DF784BF00169657 /* RemoteLetterLoader.swift */; };
 		5686B2F71DFA03E200169657 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5686B2F61DFA03E200169657 /* CoreData.framework */; };
 		5686B2F91DFA433900169657 /* LetterLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5686B2F81DFA433900169657 /* LetterLoader.swift */; };
@@ -581,7 +581,7 @@
 		56738E641DC944C10022C009 /* letter_1024_24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = letter_1024_24.png; sourceTree = "<group>"; };
 		56738E651DC944C10022C009 /* letter_1024_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = letter_1024_25.png; sourceTree = "<group>"; };
 		56738E661DC944C10022C009 /* location.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = location.png; sourceTree = "<group>"; };
-		5686B2F21DF7840600169657 /* LocalLetterLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalLetterLoader.swift; sourceTree = "<group>"; };
+		5686B2F21DF7840600169657 /* ActiveLetterLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveLetterLoader.swift; sourceTree = "<group>"; };
 		5686B2F41DF784BF00169657 /* RemoteLetterLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteLetterLoader.swift; sourceTree = "<group>"; };
 		5686B2F61DFA03E200169657 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		5686B2F81DFA433900169657 /* LetterLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LetterLoader.swift; sourceTree = "<group>"; };
@@ -847,7 +847,7 @@
 				569ACC1B1D3C1F0100B11BA2 /* ViewController.swift */,
 				569A53AE1DCBF55700810FAF /* RandomLetterLoader.swift */,
 				5686B2F81DFA433900169657 /* LetterLoader.swift */,
-				5686B2F21DF7840600169657 /* LocalLetterLoader.swift */,
+				5686B2F21DF7840600169657 /* ActiveLetterLoader.swift */,
 				5686B2F41DF784BF00169657 /* RemoteLetterLoader.swift */,
 				56B730CC1DD12C4B008905E9 /* settings.swift */,
 				56B05A001DCBE66F0026BF9D /* LetterAnnotation.swift */,
@@ -1743,7 +1743,7 @@
 				569ACC1C1D3C1F0100B11BA2 /* ViewController.swift in Sources */,
 				569A53AF1DCBF55700810FAF /* RandomLetterLoader.swift in Sources */,
 				569ACC1A1D3C1F0100B11BA2 /* AppDelegate.swift in Sources */,
-				5686B2F31DF7840600169657 /* LocalLetterLoader.swift in Sources */,
+				5686B2F31DF7840600169657 /* ActiveLetterLoader.swift in Sources */,
 				5686B2F91DFA433900169657 /* LetterLoader.swift in Sources */,
 				5686B2F51DF784BF00169657 /* RemoteLetterLoader.swift in Sources */,
 				56B05A011DCBE66F0026BF9D /* LetterAnnotation.swift in Sources */,
