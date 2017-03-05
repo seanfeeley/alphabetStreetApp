@@ -89,12 +89,28 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
+        deregister_double_tap_zoom_listeners()
         registerListeners()
         
 
     }
     
+    func deregister_double_tap_zoom_listeners(){
+        
+        if (map.subviews[0].gestureRecognizers != nil){
+            for gesture in map.subviews[0].gestureRecognizers!{
+                if gesture is UITapGestureRecognizer{
+                    let tap = gesture as! UITapGestureRecognizer
+                    if tap.numberOfTapsRequired == 2{
+                        map.subviews[0].removeGestureRecognizer(gesture)
+                    }
+                }
+            }
+        }
+    }
+    
     func registerListeners(){
+        
 
         let uizgr = UIPinchGestureRecognizer(target: self, action: #selector(ViewController.pinchRecognizer(_:)))
         uizgr.delegate=self
@@ -108,12 +124,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         uitr.delegate=self
         map.addGestureRecognizer(uitr)
         
-        
-        
-        
     }
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool{
+//        print(gestureRecognizer.description)
         return true
     }
     func pinchRecognizer(_ gestureRecognizer: UIPinchGestureRecognizer) -> Bool{
@@ -150,6 +164,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         }
         
     }
+
     
     func dropHoverPoint(letter: LetterAnnotation){
         let hoverPoint = HoverAnnotation(letter: letter)
