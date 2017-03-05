@@ -42,10 +42,10 @@ class LetterAnnotation: MKPointAnnotation{
         
     }
     
-    init(local:LocalLetter){
+    init(active: ActiveLetter){
         super.init()
-        self.objectId=local.objectId
-        self.coordinate=local.getCoordinate()
+        self.objectId=active.objectId
+        self.coordinate=active.getCoordinate()
         self.generateRandomLetter()
     }
     
@@ -172,37 +172,91 @@ class LetterAnnotation: MKPointAnnotation{
         
     }
     
+    
+    
     func generateRandomLetter(){
+        self.letterId = UInt32( get_random_doubles(count: 1)[0] * 26 )
         
-        srand48(self.getRandomSeed())
-        self.letterId = UInt32( drand48() * 26 )
     }
     
     func generateRandomCoordShift(){
-        
-        srand48(self.getRandomSeed())
-        let latShift: CLLocationDegrees = CLLocationDegrees ( drand48() * Double(LETTER_DENSITY)/2)
-        let lonShift: CLLocationDegrees = CLLocationDegrees ( drand48() * Double(LETTER_DENSITY)/2)
+        let randoms = get_random_doubles(count: 2)
+        let latShift: CLLocationDegrees = CLLocationDegrees ( randoms[0] * Double(LETTER_DENSITY)/2)
+        let lonShift: CLLocationDegrees = CLLocationDegrees ( randoms[0] * Double(LETTER_DENSITY)/2)
         self.coordinate.latitude = self.coordinate.latitude - CLLocationDegrees(LETTER_DENSITY)/4 + latShift
         self.coordinate.longitude = self.coordinate.longitude - CLLocationDegrees(LETTER_DENSITY)/4 + lonShift
-        
-        
+    }
+    
+    func get_random_doubles(count: Int) -> [Double]{
+        var seed:Double = Double(self.getRandomSeed())
+        var randoms:[Double] = []
+        var c = 0
+        while c < count{
+//            print(seed)
+            seed = get_psuedo_random_int(number: seed)
+            randoms.append(seed / 10000.0)
+            c = c + 1
+        }
+        return randoms
+    }
+    
+    
+    func get_psuedo_random_int(number: Double) -> Double{
+        let whole_number:Int = Int(number)
+        let squared: Int = whole_number * whole_number
+        let squared_string: NSString = String(format: "%08d",squared) as NSString
+        let middle_string: String = (squared_string.substring(with: NSRange(location:2, length: 4)) as NSString) as String
+        var middle_int:Int = 0
+        if middle_string.characters.count != 0{
+            middle_int = Int(middle_string as String)!
+        }
+        let middle_double:Double = Double(middle_int)
+//        print("\(number) -> \(squared) -> \(squared_string) -> \(middle_string) -> \(middle_int) -> \(middle_double)")
+        return middle_double
     }
 
     
     func getRandomSeed() -> Int {
-        let i: Int = reverseNumber(number:self.objectId.hashValue)
+        let number: Int = self.get_objectid_hash_number()
+        let absNumber:Int = abs(Int(number))
+        var absNumberStr:String = String(absNumber)
+        let absNumberStrReverse:String = String(absNumberStr.characters.reversed())
+        let big_seed:Double = Double(absNumberStrReverse)!
+        let wee_seed:Double = big_seed / pow(10.0,Double(absNumberStrReverse.characters.count))
+        let seed:Int = Int(wee_seed * 10000)
+        return seed
+    }
+    
+    func get_objectid_hash_number() -> Int{
+        let md5_hex = self.MD5(string: self.objectId)
+        let md5_string:String = md5_hex!.map { String(format: "%02hhx", $0) }.joined()
+        let md5_short_string = (md5_string as NSString).substring(to: 4)
+        let i:Int = Int(md5_short_string, radix:16)!
         return i
+    }
+    
+    func MD5(string: String) -> Data? {
+        guard let messageData = string.data(using:String.Encoding.utf8) else { return nil }
+        var digestData = Data(count: Int(CC_MD5_DIGEST_LENGTH))
+        
+        _ = digestData.withUnsafeMutableBytes {digestBytes in
+            messageData.withUnsafeBytes {messageBytes in
+                CC_MD5(messageBytes, CC_LONG(messageData.count), digestBytes)
+            }
+        }
+        
+        return digestData
     }
     
     func reverseNumber(number:Int) -> Int{
         let absNumber:Int = abs(number)
         var absNumberStr:String = String(absNumber)
         let absNumberStrReverse:String = String(absNumberStr.characters.reversed().dropLast(4))
-       
         let absNumberReverse:Int = Int(absNumberStrReverse)!
+        print(absNumberReverse)
         return absNumberReverse
     }
+    
 
     
 

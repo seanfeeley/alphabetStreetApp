@@ -44,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             
         })
-        
+        RemoteLetter.registerSubclass();
         Parse.initialize(with: parseConfiguration)
         
         

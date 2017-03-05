@@ -39,7 +39,8 @@ class RandomLetterLoader {
             let letterAnnotation:LetterAnnotation = LetterAnnotation(coord: coord as! CLLocationCoordinate2D)
             
             letters.append(letterAnnotation)
-        
+            
+            
         }
         return letters
     }
