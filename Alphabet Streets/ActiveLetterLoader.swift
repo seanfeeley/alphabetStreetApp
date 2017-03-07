@@ -63,11 +63,24 @@ class ActiveLetter: NSObject, NSCoding {
 }
 
 class RemoteLetter: PFObject, PFSubclassing {
-    @NSManaged var  oid: String?
-    @NSManaged var  clat: String?
-    @NSManaged var  clon: String?
-    @NSManaged var  olat: String?
-    @NSManaged var  olon: String?
+    @NSManaged var  oid: NSString?
+    @NSManaged var  clat: NSNumber?
+    @NSManaged var  clon: NSNumber?
+    @NSManaged var  olat: NSNumber?
+    @NSManaged var  olon: NSNumber?
+    
+    override init(){
+        super.init()
+    }
+    
+    init(letter: ActiveLetter) {
+        super.init()
+        self.oid = letter.objectId as NSString
+        self.clat = letter.latitude as NSNumber
+        self.clon = letter.longitude as NSNumber
+        self.olat = letter.original_latitude as NSNumber
+        self.olon = letter.original_longitude as NSNumber
+    }
     
     class func parseClassName() -> String {
         return "ActiveLetters"
@@ -128,9 +141,10 @@ class ActiveLetterLoader {
     }
     
     func subscribeToRemoteUpdates(){
-        liveQuery.findObjectsInBackground(block: {(remote_letters, error) -> Void in
-            print("live:\(remote_letters!.count)")
-        })
+        
+//        liveQuery.findObjectsInBackground(block: {(remote_letters, error) -> Void in
+//            print("live:\(remote_letters!.count)")
+//        })
         
         self.subscription = liveQueryClient
             .subscribe(liveQuery)
@@ -139,6 +153,8 @@ class ActiveLetterLoader {
         }
 
         }
+    
+
     
     
     func getLocalLetterDict() -> [String: ActiveLetter]{
@@ -163,15 +179,11 @@ class ActiveLetterLoader {
         query.whereKey("oid", equalTo: local_letter.objectId)
         query.findObjectsInBackground { (objects, error) -> Void in
             if error == nil {
-                var objectToSave:PFObject = PFObject(className: "ActiveLetters")
-                if objects!.count != 0{
-                    objectToSave = objects![0]
+                var objectToSave:RemoteLetter
+                if objects!.count != 0 {
+                    objectToSave = objects![0] as! RemoteLetter
                 }
-                objectToSave["clat"] = local_letter.latitude
-                objectToSave["clon"] = local_letter.longitude
-                objectToSave["olat"] = local_letter.original_latitude
-                objectToSave["slon"] = local_letter.original_longitude
-                objectToSave["oid"] = local_letter.objectId
+                objectToSave = RemoteLetter(letter: local_letter)
                 objectToSave.saveInBackground(block: { (success, error) -> Void in
                     if error == nil {
                         if objects!.count != 0{

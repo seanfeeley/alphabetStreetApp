@@ -65,6 +65,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If you would like all objects to be private by default, remove this line.
         defaultACL.getPublicReadAccess = true
         defaultACL.getPublicWriteAccess = true
+        defaultACL.setWriteAccess(true, forRoleWithName:"everyone")
+
         
         
         PFACL.setDefault(defaultACL, withAccessForCurrentUser: true)
