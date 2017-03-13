@@ -28,16 +28,16 @@ class LetterLoader {
         
     }
     
-    func saveLetter(letter: LetterAnnotation){
+    func saveLetter(_ letter: LetterAnnotation){
         
-        self.activeLetterLoader.saveLetter(letter: letter)
+        self.activeLetterLoader.saveLetter(letter)
         
     }
     func areLettersStillVisible() -> Bool{
         return self.randomLetterLoader.areLettersStillVisible()
     
     }
-    func placeLetters(selectedObjectId: String?){
+    func placeLetters(_ selectedObjectId: String?){
         
         
         var oldAnnotations: [LetterAnnotation] = self.map.annotations as! [LetterAnnotation]

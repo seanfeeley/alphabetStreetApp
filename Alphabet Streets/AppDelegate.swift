@@ -66,6 +66,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         defaultACL.getPublicReadAccess = true
         defaultACL.getPublicWriteAccess = true
         defaultACL.setWriteAccess(true, forRoleWithName:"everyone")
+        defaultACL.setReadAccess(true, forRoleWithName:"everyone")
 
         
         

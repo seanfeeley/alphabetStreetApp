@@ -10,7 +10,7 @@
 import Foundation
 import Parse
 import BoltsSwift
-import SocketRocket
+import Starscream
 
 /**
  This is the 'advanced' view of live query subscriptions. It allows you to customize your subscriptions
@@ -22,8 +22,8 @@ open class Client: NSObject {
     let applicationId: String
     let clientKey: String?
 
-    var socket: SRWebSocket?
-    var userDisconnected = false
+    var socket: WebSocket?
+    public var userDisconnected = false
 
     // This allows us to easily plug in another request ID generation scheme, or more easily change the request id type
     // if needed (technically this could be a string).
@@ -149,10 +149,11 @@ extension Client {
             handler: handler
         )
         subscriptions.append(subscriptionRecord)
-        
-        if socket?.readyState == .OPEN {
-            _ = sendOperationAsync(.subscribe(requestId: subscriptionRecord.requestId, query: query as! PFQuery<PFObject>))
-        } else if socket == nil || socket?.readyState != .CONNECTING {
+
+        if let socket = socket, socket.isConnected == true {
+            _ = sendOperationAsync(.subscribe(requestId: subscriptionRecord.requestId, query: query as! PFQuery<PFObject>,
+            sessionToken: PFUser.current()?.sessionToken))
+        } else {
             if !userDisconnected {
                 reconnect()
             } else {
@@ -161,6 +162,26 @@ extension Client {
         }
         
         return handler
+    }
+
+    /**
+     Updates an existing subscription with a new query.
+     Upon completing the registration, the subscribe handler will be called with the new query
+
+     - parameter handler: The specific handler to update.
+     - parameter query:   The new query for that handler.
+     */
+    public func update<T>(
+        _ handler: T,
+        toQuery query: PFQuery<T.PFObjectSubclass>
+        ) where T: SubscriptionHandling {
+        subscriptions = subscriptions.map {
+            if $0.subscriptionHandler === handler {
+                _ = sendOperationAsync(.update(requestId: $0.requestId, query: query as! PFQuery<PFObject>))
+                return SubscriptionRecord(query: query, requestId: $0.requestId, handler: $0.subscriptionHandler as! T)
+            }
+            return $0
+        }
     }
 
     /**
@@ -186,11 +207,10 @@ extension Client {
     func unsubscribe(matching matcher: @escaping (SubscriptionRecord) -> Bool) {
         subscriptions.filter {
             matcher($0)
-            }.forEach {
-                _ = sendOperationAsync(.unsubscribe(requestId: $0.requestId))
+        }.forEach {
+            _ = sendOperationAsync(.unsubscribe(requestId: $0.requestId))
         }
     }
-    
 }
 
 extension Client {
@@ -201,12 +221,12 @@ extension Client {
      you use the client, and should usually only be called when an error occurs.
      */
     public func reconnect() {
-        socket?.close()
+        socket?.disconnect()
         socket = {
-            let socket: SRWebSocket = SRWebSocket(url: host)
+            let socket = WebSocket(url: host)
             socket.delegate = self
-            socket.setDelegateDispatchQueue(queue)
-            socket.open()
+            socket.callbackQueue = queue
+            socket.connect()
             userDisconnected = false
             return socket
         }()
@@ -223,7 +243,7 @@ extension Client {
             else {
                 return
         }
-        socket.close()
+        socket.disconnect()
         self.socket = nil
         userDisconnected = true
     }

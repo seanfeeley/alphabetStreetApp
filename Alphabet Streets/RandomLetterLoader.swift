@@ -8,7 +8,7 @@
 
 import Foundation
 import Parse
-import ParseLiveQuery
+import Pods_Alphabet_Streets
 import MapKit
 
 class RandomLetterLoader {
@@ -47,7 +47,7 @@ class RandomLetterLoader {
     
     
     func getGridOfCoords() -> NSMutableArray{
-        var coords:NSMutableArray=[]
+        let coords:NSMutableArray=[]
         let topLeft: CLLocationCoordinate2D = self.getMapTopLeftCoordinate()
         
         let bottomRight: CLLocationCoordinate2D = self.getMapBottomRightCoordinate()
@@ -59,10 +59,10 @@ class RandomLetterLoader {
         
         while coord_to_add.latitude > bottomRight.latitude{
             coord_to_add.longitude = topLeft.longitude
-            coord_to_add.latitude = self.getNextUnEqualLatitude(coord: coord_to_add)
+            coord_to_add.latitude = self.getNextUnEqualLatitude(coord_to_add)
             
             while coord_to_add.longitude < bottomRight.longitude{
-                coord_to_add.longitude = self.getNextUnEqualLongitude(coord: coord_to_add)
+                coord_to_add.longitude = self.getNextUnEqualLongitude(coord_to_add)
                 
                 if coord_to_add.latitude < topLeft.latitude && coord_to_add.longitude > topLeft.longitude{
                     
@@ -76,25 +76,25 @@ class RandomLetterLoader {
         
         return coords
     }
-    func getNextUnEqualLatitude(coord: CLLocationCoordinate2D) -> CLLocationDegrees{
+    func getNextUnEqualLatitude(_ coord: CLLocationCoordinate2D) -> CLLocationDegrees{
         let latitude: CLLocationDegrees = coord.latitude
         
         return latitude - CLLocationDegrees(LETTER_DENSITY)
     }
-    func getNextUnEqualLongitude(coord: CLLocationCoordinate2D) -> CLLocationDegrees{
+    func getNextUnEqualLongitude(_ coord: CLLocationCoordinate2D) -> CLLocationDegrees{
         let longitude: CLLocationDegrees = coord.longitude
         
         return longitude + CLLocationDegrees(LETTER_DENSITY)
     }
     
     
-    func getNextEqualLatitude(coord: CLLocationCoordinate2D) -> CLLocationDegrees{
+    func getNextEqualLatitude(_ coord: CLLocationCoordinate2D) -> CLLocationDegrees{
         var xyPoint: CGPoint = self.map.convert(coord, toPointTo: self.map.inputView)
         xyPoint.y = xyPoint.y + self.getLetterDensity()
         let newLocation = self.map.convert(xyPoint, toCoordinateFrom: self.map.inputView)
         return newLocation.latitude
     }
-    func getNextEqualLongitude(coord: CLLocationCoordinate2D) -> CLLocationDegrees{
+    func getNextEqualLongitude(_ coord: CLLocationCoordinate2D) -> CLLocationDegrees{
         var xyPoint: CGPoint = self.map.convert(coord, toPointTo: self.map.inputView)
         xyPoint.x = xyPoint.x + self.getLetterDensity()
         let newLocation = self.map.convert(xyPoint, toCoordinateFrom: self.map.inputView)
@@ -102,7 +102,7 @@ class RandomLetterLoader {
     }
     func getLetterDensity() -> CGFloat
     {
-        return LETTER_DENSITY / CGFloat(getZoomLevel(mapView: self.map))
+        return LETTER_DENSITY / CGFloat(getZoomLevel(self.map))
     }
     
   
@@ -125,7 +125,7 @@ class RandomLetterLoader {
     func uploadAnnotations(){
         
         for object in self.points_to_upload{
-            self.uploadAnnotation(obj: object as! Array<Any>)
+            self.uploadAnnotation(object as! Array<Any>)
             self.points_to_upload.remove(object)
             
         }
@@ -133,7 +133,7 @@ class RandomLetterLoader {
         
     }
     
-    func uploadAnnotation(obj: Array<Any>){
+    func uploadAnnotation(_ obj: Array<Any>){
         let query = PFQuery(className: "Active Letters")
         query.whereKey("objectId", equalTo: obj[0])
         query.findObjectsInBackground { (
@@ -150,7 +150,7 @@ class RandomLetterLoader {
     
 
     func areLettersStillVisible() -> Bool{
-        let zoom_level = getZoomLevel(mapView: self.map)
+        let zoom_level = getZoomLevel(self.map)
        
     
         if(zoom_level <= ZOOM_CUT_OFF){

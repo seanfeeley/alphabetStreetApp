@@ -22,7 +22,7 @@ let LETTER_OPACITY_FLOOR: CGFloat = 16
 let LETTER_OPACITY_CEIL: CGFloat = 32
 
 
-func getZoomLevel(mapView: MKMapView) -> CGFloat{
+func getZoomLevel(_ mapView: MKMapView) -> CGFloat{
     let MERCATOR_RADIUS:CGFloat = 85445659.44705395
     let longitudeDelta: CLLocationDegrees = mapView.region.span.longitudeDelta
     let mapWidthInPixels: CGFloat = mapView.bounds.size.width
@@ -31,9 +31,9 @@ func getZoomLevel(mapView: MKMapView) -> CGFloat{
     return zoom
 }
 
-func getMetersBetweenLetterRefreshes(mapView: MKMapView) -> CLLocationDegrees{
+func getMetersBetweenLetterRefreshes(_ mapView: MKMapView) -> CLLocationDegrees{
 
-    return CLLocationDegrees(METERS_BETWEEN_LOADS * getZoomLevel(mapView: mapView))
+    return CLLocationDegrees(METERS_BETWEEN_LOADS * getZoomLevel(mapView))
 }
 
 func getTapingDistance() -> CLLocationDistance{
@@ -41,12 +41,12 @@ func getTapingDistance() -> CLLocationDistance{
 }
 
 
-func getHoverHeight(mapView: MKMapView) -> CGFloat{
-    return HOVER_HEIGHT/getZoomLevel(mapView: mapView)
+func getHoverHeight(_ mapView: MKMapView) -> CGFloat{
+    return HOVER_HEIGHT/getZoomLevel(mapView)
     
 }
 
-func getMovementTimeBetweenTwoPoints(coordA: CLLocationCoordinate2D, coordB: CLLocationCoordinate2D) -> Double {
+func getMovementTimeBetweenTwoPoints(_ coordA: CLLocationCoordinate2D, coordB: CLLocationCoordinate2D) -> Double {
 //    let locA: CLLocation = CLLocation(latitude: coordA.latitude, longitude: coordA.longitude)
 //    let locB: CLLocation = CLLocation(latitude: coordB.latitude, longitude: coordB.longitude)
 //    let distance = locA.distance(from: locB)
@@ -62,3 +62,13 @@ func getMovementTimeBetweenTwoPoints(coordA: CLLocationCoordinate2D, coordB: CLL
     
 }
 
+
+
+
+extension Dictionary {
+    mutating func update(_ other:Dictionary) {
+        for (key,value) in other {
+            self.updateValue(value, forKey:key)
+        }
+    }
+}

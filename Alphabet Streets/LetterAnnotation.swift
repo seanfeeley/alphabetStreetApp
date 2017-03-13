@@ -61,7 +61,7 @@ class LetterAnnotation: MKPointAnnotation{
     
     
     
-    func getView( mapView: MKMapView) -> MKAnnotationView {
+    func getView( _ mapView: MKMapView) -> MKAnnotationView {
         
         
         
@@ -75,11 +75,11 @@ class LetterAnnotation: MKPointAnnotation{
         else {
             anView!.annotation = self
         }
-        let newWidth:CGFloat = self.getLetterWidth(mapView: mapView)
-        self.setImageFile(width: newWidth)
-        anView!.image = self.getResizedImage(newWidth: newWidth)
+        let newWidth:CGFloat = self.getLetterWidth(mapView)
+        self.setImageFile(newWidth)
+        anView!.image = self.getResizedImage(newWidth)
         
-        anView!.alpha = self.getLetterOpacity(width: newWidth)
+        anView!.alpha = self.getLetterOpacity(newWidth)
         anView!.layer.zPosition = self.getZPosition()
 
 
@@ -94,7 +94,7 @@ class LetterAnnotation: MKPointAnnotation{
         return 0
     }
 
-    func getLetterWidth( mapView: MKMapView) -> CGFloat{
+    func getLetterWidth( _ mapView: MKMapView) -> CGFloat{
         
         var pixels:CGFloat = 64.0
         
@@ -109,13 +109,13 @@ class LetterAnnotation: MKPointAnnotation{
         //    pixels=32
         //}z
         
-        pixels=pixels/getZoomLevel(mapView: mapView)
+        pixels=pixels/getZoomLevel(mapView)
         return pixels
         
         
     }
     
-    func getLetterOpacity(width: CGFloat) -> CGFloat{
+    func getLetterOpacity(_ width: CGFloat) -> CGFloat{
         
         let opacity: CGFloat = 1
         
@@ -137,7 +137,7 @@ class LetterAnnotation: MKPointAnnotation{
     
 
 
-    func getResizedImage(newWidth: CGFloat) -> UIImage {
+    func getResizedImage(_ newWidth: CGFloat) -> UIImage {
         
         let scale = newWidth / image.size.width
         let newHeight = image.size.height * scale
@@ -175,25 +175,25 @@ class LetterAnnotation: MKPointAnnotation{
     
     
     func generateRandomLetter(){
-        self.letterId = UInt32( get_random_doubles(count: 1)[0] * 26 )
+        self.letterId = UInt32( get_random_doubles(1)[0] * 26 )
         
     }
     
     func generateRandomCoordShift(){
-        let randoms = get_random_doubles(count: 2)
+        let randoms = get_random_doubles(2)
         let latShift: CLLocationDegrees = CLLocationDegrees ( randoms[0] * Double(LETTER_DENSITY)/2)
         let lonShift: CLLocationDegrees = CLLocationDegrees ( randoms[0] * Double(LETTER_DENSITY)/2)
         self.coordinate.latitude = self.coordinate.latitude - CLLocationDegrees(LETTER_DENSITY)/4 + latShift
         self.coordinate.longitude = self.coordinate.longitude - CLLocationDegrees(LETTER_DENSITY)/4 + lonShift
     }
     
-    func get_random_doubles(count: Int) -> [Double]{
+    func get_random_doubles(_ count: Int) -> [Double]{
         var seed:Double = Double(self.getRandomSeed())
         var randoms:[Double] = []
         var c = 0
         while c < count{
 //            print(seed)
-            seed = get_psuedo_random_int(number: seed)
+            seed = get_psuedo_random_int(seed)
             randoms.append(seed / 10000.0)
             c = c + 1
         }
@@ -201,7 +201,7 @@ class LetterAnnotation: MKPointAnnotation{
     }
     
     
-    func get_psuedo_random_int(number: Double) -> Double{
+    func get_psuedo_random_int(_ number: Double) -> Double{
         let whole_number:Int = Int(number)
         let squared: Int = whole_number * whole_number
         let squared_string: NSString = String(format: "%08d",squared) as NSString
@@ -228,14 +228,14 @@ class LetterAnnotation: MKPointAnnotation{
     }
     
     func get_objectid_hash_number() -> Int{
-        let md5_hex = self.MD5(string: self.objectId)
+        let md5_hex = self.MD5(self.objectId)
         let md5_string:String = md5_hex!.map { String(format: "%02hhx", $0) }.joined()
         let md5_short_string = (md5_string as NSString).substring(to: 4)
         let i:Int = Int(md5_short_string, radix:16)!
         return i
     }
     
-    func MD5(string: String) -> Data? {
+    func MD5(_ string: String) -> Data? {
         guard let messageData = string.data(using:String.Encoding.utf8) else { return nil }
         var digestData = Data(count: Int(CC_MD5_DIGEST_LENGTH))
         
@@ -248,7 +248,7 @@ class LetterAnnotation: MKPointAnnotation{
         return digestData
     }
     
-    func reverseNumber(number:Int) -> Int{
+    func reverseNumber(_ number:Int) -> Int{
         let absNumber:Int = abs(number)
         var absNumberStr:String = String(absNumber)
         let absNumberStrReverse:String = String(absNumberStr.characters.reversed().dropLast(4))
@@ -264,14 +264,14 @@ class LetterAnnotation: MKPointAnnotation{
     
 
     
-    func setImageFile(width: CGFloat){
-        self.setLetterFileResolution(width: width)
+    func setImageFile(_ width: CGFloat){
+        self.setLetterFileResolution(width)
         self.image = UIImage(named:"letter_\(String(format: "%02d", letterFile))_\(String(format: "%02d", letterId)).png")!
         
     }
     
     
-    func setLetterFileResolution(width: CGFloat){
+    func setLetterFileResolution(_ width: CGFloat){
         self.letterFile = 16
         
         let resized = width/1
@@ -305,33 +305,4 @@ class LetterAnnotation: MKPointAnnotation{
     
 }
 
-class HoverAnnotation: LetterAnnotation {
-    
-    init(letter: LetterAnnotation){
-        super.init(other: letter)
-    }
-    
-
-    
-    override func setImageFile(width: CGFloat){
-        self.setLetterFileResolution(width: width)
-        self.image = UIImage(named:"hover_letter_\(String(format: "%02d", letterFile))_\(String(format: "%02d", letterId)).png")!
-        
-    }
-    
-    override func getZPosition() -> CGFloat{
-        return 0.5
-    }
-    
-    override func getLetterOpacity(width: CGFloat) -> CGFloat{
-        
-        let opacity: CGFloat = 0.3
-        
-
-        return opacity
-        
-    }
-    
-    
-}
 
