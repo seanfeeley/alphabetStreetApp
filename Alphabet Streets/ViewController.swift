@@ -153,11 +153,11 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             let touchLocation: CGPoint = sender.location(in: sender.view)
             let touchCoord = self.map.convert(touchLocation, toCoordinateFrom: self.map.inputView)
             if self.selectedObjectId == nil {
-                self.setSelectedLetter(coord: touchCoord)
+                self.setSelectedLetter(touchCoord)
             }
             else if self.letterLoader.areLettersStillVisible() {
-                self.moveHoverPoint(coord: touchCoord)
-                self.dropSelectedLetter(coord: touchCoord)
+                self.moveHoverPoint(touchCoord)
+                self.dropSelectedLetter(touchCoord)
                 
             }
             
@@ -166,12 +166,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
 
     
-    func dropHoverPoint(letter: LetterAnnotation){
+    func dropHoverPoint(_ letter: LetterAnnotation){
         let hoverPoint = HoverAnnotation(letter: letter)
         self.map.addAnnotation(hoverPoint)
     }
     
-    func moveHoverPoint(coord: CLLocationCoordinate2D){
+    func moveHoverPoint(_ coord: CLLocationCoordinate2D){
         let hoverPoint = self.getHoverPoint()
         UIView.animate(withDuration: 0.2, delay:0, options: [.curveEaseOut], animations: {
            hoverPoint?.coordinate = coord
@@ -185,12 +185,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
    
     
-    func dropSelectedLetter(coord: CLLocationCoordinate2D){
+    func dropSelectedLetter(_ coord: CLLocationCoordinate2D){
         
         let selectedLetter = self.getSelectedLetter()
         
         if selectedLetter != nil{
-            selectedLetter!.getView(mapView: self.map).layer.removeAllAnimations()
+            selectedLetter!.getView(self.map).layer.removeAllAnimations()
             UIView.animate(withDuration: 0.2,  delay: 0, options: [.curveEaseOut],animations: {
                 
                 selectedLetter!.coordinate=coord
@@ -198,7 +198,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             }, completion: { (completed) in
                 
                 selectedLetter!.isHovering = false
-                self.letterLoader.saveLetter(letter: selectedLetter!)
+                self.letterLoader.saveLetter(selectedLetter!)
                 self.selectedObjectId = nil
                 self.removeAllHoverShadows()
                 
@@ -210,7 +210,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     }
     
     
-    func setSelectedLetter(coord: CLLocationCoordinate2D){
+    func setSelectedLetter(_ coord: CLLocationCoordinate2D){
         let tapLocation: CLLocation = CLLocation(latitude: coord.latitude, longitude: coord.longitude)
         for annotation in self.map.annotations{
         
@@ -221,7 +221,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             if distance < getTapingDistance(){
                 let selectedLetter = annotation as! LetterAnnotation
                 self.selectedObjectId = selectedLetter.objectId
-                self.dropHoverPoint(letter: selectedLetter)
+                self.dropHoverPoint(selectedLetter)
                 self.startHoveringSelectedLetter()
                 return
                 }
@@ -277,7 +277,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             
 
             let selectedLetterXY = self.map.convert((selectedLetter!.coordinate), toPointTo: self.map.inputView)
-            let newSelectedLeterXY = CGPoint(x: selectedLetterXY.x, y: selectedLetterXY.y - getHoverHeight(mapView: self.map))
+            let newSelectedLeterXY = CGPoint(x: selectedLetterXY.x, y: selectedLetterXY.y - getHoverHeight(self.map))
             selectedLetter!.coordinate=self.map.convert(newSelectedLeterXY, toCoordinateFrom: self.map.inputView)
             
         }, completion: { (completed) in
@@ -325,7 +325,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     func locationHasChanged(){
         let locationNow=CLLocation(latitude:  self.map.region.center.latitude,longitude:  self.map.region.center.longitude)
-        let meters_between_loads:CLLocationDegrees = getMetersBetweenLetterRefreshes(mapView: self.map)
+        let meters_between_loads:CLLocationDegrees = getMetersBetweenLetterRefreshes(self.map)
         
         if self.centerPointAtLastPointLoad != nil{
             let difference:CLLocationDegrees = meters_between_loads - self.meterBetweenRefreshesAtLastLoad!
@@ -478,12 +478,12 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     func placeLetterAnnotations(){
         if (self.letterLoader.areLettersStillVisible()){
         self.centerPointAtLastPointLoad = CLLocation(latitude:  self.map.region.center.latitude,longitude:  self.map.region.center.longitude)
-        self.meterBetweenRefreshesAtLastLoad = getMetersBetweenLetterRefreshes(mapView: self.map)
+        self.meterBetweenRefreshesAtLastLoad = getMetersBetweenLetterRefreshes(self.map)
             
             
         
 
-        self.letterLoader.placeLetters(selectedObjectId: self.selectedObjectId)
+        self.letterLoader.placeLetters(self.selectedObjectId)
         
         }
     }
@@ -499,7 +499,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let letterAnnotation: LetterAnnotation = annotation as! LetterAnnotation
-        return letterAnnotation.getView(mapView: mapView)
+        return letterAnnotation.getView(mapView)
 
     }
     

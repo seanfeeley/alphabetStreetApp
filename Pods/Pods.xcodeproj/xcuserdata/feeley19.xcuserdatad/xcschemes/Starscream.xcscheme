@@ -14,10 +14,10 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'EA881D53C814D775E5670C7C3B6F687E'
-               BlueprintName = 'ParseLiveQuery'
+               BlueprintIdentifier = '174E215DF32AD89194080E3A425AB81F'
+               BlueprintName = 'Starscream'
                ReferencedContainer = 'container:Pods.xcodeproj'
-               BuildableName = 'ParseLiveQuery.framework'>
+               BuildableName = 'Starscream.framework'>
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
