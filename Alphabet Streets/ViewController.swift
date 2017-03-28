@@ -45,30 +45,6 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     var oldMapRegion: MKCoordinateRegion? = nil
     
     var letterLoader: LetterLoader!
-    
-//    var draggingPoint: CustomPointAnnotation? = nil
-//    var hoverPoint: CustomPointAnnotation? = nil
-//    var draggingMapPoint: CLLocation? = nil
-//    var already_existing_ids:[String] = []
-//    var points_to_remove: NSMutableArray = []
-//    var points_to_move: NSMutableArray = []
-//    var points_to_add: NSMutableArray = []
-//
-//    var touchPoint:CGPoint? = nil
-//    
-//    
-//    var drapPanTimer:Timer? = nil
-//    var dragPanLat=0.0
-//    var dragPanLon=0.0
-//    
-//    var subscription: Subscription<PFObject>?
-//    
-//    var loadingPointsIn:Bool = false
-//    var uploadingPoints:Bool = false
-//    var newPointsLoadedIn:Bool = false
-//    
-//    
-//    var reachabilityNotice:Bool = false
 
     
     
@@ -427,10 +403,13 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
-                
+
         if self.currentUserLocation == nil {
             self.currentUserLocation = locations[locations.count-1]
             centerMapToUserLocation()
+        }
+        else{
+            self.currentUserLocation = locations[locations.count-1]
         }
         
     }
@@ -482,8 +461,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             
             
         
-
-        self.letterLoader.placeLetters(self.selectedObjectId)
+        self.letterLoader.selectedObjectId = self.selectedObjectId
+        self.letterLoader.getFirebaseData()
         
         }
     }

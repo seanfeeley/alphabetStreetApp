@@ -10,9 +10,7 @@
 		2190B98FF1902C0E3F6C35B9 /* Pods_Alphabet_Streets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 083BD0890626B98D0041E5D6 /* Pods_Alphabet_Streets.framework */; };
 		56049D791E75EB8A00AB898B /* Pods_Alphabet_Streets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56049D781E75EB8A00AB898B /* Pods_Alphabet_Streets.framework */; };
 		56049D9D1E75FB6100AB898B /* ShadowLetterAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56049D9C1E75FB6100AB898B /* ShadowLetterAnnotation.swift */; };
-		56049D9F1E75FB7A00AB898B /* ActiveLetterAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56049D9E1E75FB7A00AB898B /* ActiveLetterAnnotation.swift */; };
-		56049DA11E75FB8D00AB898B /* RemoteLetterAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56049DA01E75FB8D00AB898B /* RemoteLetterAnnotation.swift */; };
-		56049DA31E75FCC900AB898B /* LocalLetterLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56049DA21E75FCC900AB898B /* LocalLetterLoader.swift */; };
+		563FEA271E83260600CA7FB0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 563FEA261E83260600CA7FB0 /* GoogleService-Info.plist */; };
 		56738E671DC944C10022C009 /* hover.png in Resources */ = {isa = PBXBuildFile; fileRef = 56738DAF1DC944C10022C009 /* hover.png */; };
 		56738E681DC944C10022C009 /* letter_16_00.png in Resources */ = {isa = PBXBuildFile; fileRef = 56738DB01DC944C10022C009 /* letter_16_00.png */; };
 		56738E691DC944C10022C009 /* letter_16_01.png in Resources */ = {isa = PBXBuildFile; fileRef = 56738DB11DC944C10022C009 /* letter_16_01.png */; };
@@ -401,9 +399,7 @@
 		083BD0890626B98D0041E5D6 /* Pods_Alphabet_Streets.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Alphabet_Streets.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		56049D781E75EB8A00AB898B /* Pods_Alphabet_Streets.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = Pods_Alphabet_Streets.framework; path = "/Users/feeley19/coding/projects/Learning iOS Development/AlphabetStreets/build/Debug-iphoneos/Pods_Alphabet_Streets.framework"; sourceTree = "<absolute>"; };
 		56049D9C1E75FB6100AB898B /* ShadowLetterAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShadowLetterAnnotation.swift; sourceTree = "<group>"; };
-		56049D9E1E75FB7A00AB898B /* ActiveLetterAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActiveLetterAnnotation.swift; sourceTree = "<group>"; };
-		56049DA01E75FB8D00AB898B /* RemoteLetterAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteLetterAnnotation.swift; sourceTree = "<group>"; };
-		56049DA21E75FCC900AB898B /* LocalLetterLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalLetterLoader.swift; sourceTree = "<group>"; };
+		563FEA261E83260600CA7FB0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		56738DAF1DC944C10022C009 /* hover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hover.png; sourceTree = "<group>"; };
 		56738DB01DC944C10022C009 /* letter_16_00.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = letter_16_00.png; sourceTree = "<group>"; };
 		56738DB11DC944C10022C009 /* letter_16_01.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = letter_16_01.png; sourceTree = "<group>"; };
@@ -825,8 +821,6 @@
 			children = (
 				56B05A001DCBE66F0026BF9D /* LetterAnnotation.swift */,
 				56049D9C1E75FB6100AB898B /* ShadowLetterAnnotation.swift */,
-				56049D9E1E75FB7A00AB898B /* ActiveLetterAnnotation.swift */,
-				56049DA01E75FB8D00AB898B /* RemoteLetterAnnotation.swift */,
 			);
 			name = LetterClasses;
 			sourceTree = "<group>";
@@ -838,7 +832,6 @@
 				5686B2F81DFA433900169657 /* LetterLoader.swift */,
 				5686B2F41DF784BF00169657 /* RemoteLetterLoader.swift */,
 				5686B2F21DF7840600169657 /* ActiveLetterLoader.swift */,
-				56049DA21E75FCC900AB898B /* LocalLetterLoader.swift */,
 			);
 			name = LetterLoaders;
 			sourceTree = "<group>";
@@ -865,6 +858,7 @@
 		569ACC181D3C1F0100B11BA2 /* Alphabet Streets */ = {
 			isa = PBXGroup;
 			children = (
+				563FEA261E83260600CA7FB0 /* GoogleService-Info.plist */,
 				56049D9B1E75F92100AB898B /* LetterLoaders */,
 				56049D9A1E75F90600AB898B /* LetterClasses */,
 				569ACC4A1D3C58BF00B11BA2 /* alphabetImages */,
@@ -1447,6 +1441,7 @@
 				56738EFC1DC944C20022C009 /* letter_512_18.png in Resources */,
 				56738EFA1DC944C20022C009 /* letter_512_16.png in Resources */,
 				56B9026B1DE7ADE00053B156 /* hover_letter_16_13.png in Resources */,
+				563FEA271E83260600CA7FB0 /* GoogleService-Info.plist in Resources */,
 				56738EC61DC944C20022C009 /* letter_128_16.png in Resources */,
 				56738EF91DC944C20022C009 /* letter_512_15.png in Resources */,
 				56738ED81DC944C20022C009 /* letter_256_08.png in Resources */,
@@ -1759,15 +1754,12 @@
 			files = (
 				569ACC1C1D3C1F0100B11BA2 /* ViewController.swift in Sources */,
 				569A53AF1DCBF55700810FAF /* RandomLetterLoader.swift in Sources */,
-				56049DA11E75FB8D00AB898B /* RemoteLetterAnnotation.swift in Sources */,
 				569ACC1A1D3C1F0100B11BA2 /* AppDelegate.swift in Sources */,
 				56049D9D1E75FB6100AB898B /* ShadowLetterAnnotation.swift in Sources */,
 				5686B2F31DF7840600169657 /* ActiveLetterLoader.swift in Sources */,
 				5686B2F91DFA433900169657 /* LetterLoader.swift in Sources */,
 				5686B2F51DF784BF00169657 /* RemoteLetterLoader.swift in Sources */,
-				56049DA31E75FCC900AB898B /* LocalLetterLoader.swift in Sources */,
 				56B05A011DCBE66F0026BF9D /* LetterAnnotation.swift in Sources */,
-				56049D9F1E75FB7A00AB898B /* ActiveLetterAnnotation.swift in Sources */,
 				56B730CD1DD12C4B008905E9 /* settings.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
