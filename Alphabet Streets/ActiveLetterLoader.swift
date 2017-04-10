@@ -33,10 +33,7 @@ class ActiveLetterLoader {
     
     func register_listeners() {
         ref.removeAllObservers()
-        print(self.map.region.center.latitude - self.map.region.span.latitudeDelta/2)
-        print(self.map.region.center.latitude + self.map.region.span.latitudeDelta/2)
-        print(self.map.region.center.longitude - self.map.region.span.longitudeDelta/2)
-        print(self.map.region.center.longitude + self.map.region.span.longitudeDelta/2)
+
         _ = ref.child("active").observe(FIRDataEventType.value, with: { (snapshot) in
             print("snapshot")
         })

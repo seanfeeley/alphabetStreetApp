@@ -69,7 +69,7 @@ class RandomLetterLoader {
             }
             
         }
-        
+//        print (topLeft,bottomRight,coords.count)
         return coords
     }
     func getNextUnEqualLatitude(_ coord: CLLocationCoordinate2D) -> CLLocationDegrees{

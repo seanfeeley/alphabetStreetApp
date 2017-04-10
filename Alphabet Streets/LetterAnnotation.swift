@@ -26,6 +26,7 @@ class LetterAnnotation: MKPointAnnotation{
     var firebase_lon_string = ""
     var firebase_olat_string = ""
     var firebase_olon_string = ""
+    var animate_in = false
     var z: CGFloat = 0
     
     init(coord: CLLocationCoordinate2D) {
@@ -71,18 +72,21 @@ class LetterAnnotation: MKPointAnnotation{
     }
     
     
-    func toDict() -> [String:Any]{
+    func toDict() -> [String:String]{
         var dict = Dictionary<String,String>()
+        self.generateFirebaseStrings()
         dict["lat"] = String(self.coordinate.latitude)
         dict["lon"] = String(self.coordinate.longitude)
         dict["olat"] = String(self.original_latitude)
         dict["olon"] = String(self.original_longitude)
+        dict["flat"] = String(self.firebase_lat_string)
+        dict["flon"] = String(self.firebase_lon_string)
         dict["oid"] = self.objectId
         return dict
     }
     
     
-    func generateFirbaseStrings(){
+    func generateFirebaseStrings(){
         self.firebase_lat_string=String(format: "%.2f", self.coordinate.latitude)
         self.firebase_lat_string=self.firebase_lat_string.replacingOccurrences(of: ".", with: "_", options: .literal, range: nil)
         self.firebase_lon_string=String(format: "%.2f", self.coordinate.longitude)
@@ -119,7 +123,7 @@ class LetterAnnotation: MKPointAnnotation{
         
         anView!.alpha = self.getLetterOpacity(newWidth)
         anView!.layer.zPosition = self.getZPosition()
-
+        
 
         
         return anView!
@@ -205,7 +209,12 @@ class LetterAnnotation: MKPointAnnotation{
 
         
     }
-    
+    func start_hovering_on_map(map: MKMapView){
+        let selectedLetterXY = map.convert((self.coordinate), toPointTo: map.inputView)
+        let newSelectedLeterXY = CGPoint(x: selectedLetterXY.x, y: selectedLetterXY.y - getHoverHeight(map))
+        self.coordinate=map.convert(newSelectedLeterXY, toCoordinateFrom: map.inputView)
+        
+    }
     func setOriginalCoords(){
         let shortentedLat = CLLocationDegrees(self.objectId.components(separatedBy: "&")[0]
             .replacingOccurrences(of: "_", with: ".", options: .literal, range: nil))
