@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Parse
+
 import Pods_Alphabet_Streets
 import MapKit
 
@@ -22,11 +22,7 @@ class RandomLetterLoader {
         
         self.map=map
         
-  
-//        let uploadPointsTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(ViewController.uploadAnnotations), userInfo: nil, repeats: true)
-        //let movePointsTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(ViewController.moveAnnotations), userInfo: nil, repeats: true)
-        //let loadPointsTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(ViewController.loadAnnotations), userInfo: nil, repeats: true)
-        
+
         
     }
 
@@ -73,7 +69,7 @@ class RandomLetterLoader {
             }
             
         }
-        
+//        print (topLeft,bottomRight,coords.count)
         return coords
     }
     func getNextUnEqualLatitude(_ coord: CLLocationCoordinate2D) -> CLLocationDegrees{
@@ -134,15 +130,6 @@ class RandomLetterLoader {
     }
     
     func uploadAnnotation(_ obj: Array<Any>){
-        let query = PFQuery(className: "Active Letters")
-        query.whereKey("objectId", equalTo: obj[0])
-        query.findObjectsInBackground { (
-            objects, error) in
-            let prefObj = objects![0]
-            prefObj["latitude"] = obj[1]
-            prefObj["longitude"] = obj[2]
-            prefObj.saveEventually()
-        }
         
     }
 

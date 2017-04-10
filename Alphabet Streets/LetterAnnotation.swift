@@ -20,11 +20,20 @@ class LetterAnnotation: MKPointAnnotation{
     let zoomFactor: CGFloat = LETTER_WIDTH
     var toUpdate: Bool = false
     var isHovering: Bool = false
+    var original_latitude: CLLocationDegrees = 0
+    var original_longitude: CLLocationDegrees = 0
+    var firebase_lat_string = ""
+    var firebase_lon_string = ""
+    var firebase_olat_string = ""
+    var firebase_olon_string = ""
+    var animate_in = false
     var z: CGFloat = 0
     
     init(coord: CLLocationCoordinate2D) {
         super.init()
         self.coordinate=coord
+        self.original_longitude = self.coordinate.longitude
+        self.original_latitude = self.coordinate.latitude
         self.generateObjectId()
         self.generateRandomLetter()
         self.generateRandomCoordShift()
@@ -35,6 +44,8 @@ class LetterAnnotation: MKPointAnnotation{
     init(other:LetterAnnotation){
         super.init()
         self.coordinate = other.coordinate
+        self.original_longitude = self.coordinate.longitude
+        self.original_latitude = self.coordinate.latitude
         self.letterId = other.letterId
         self.letterFile = other.letterFile
         self.objectId = other.objectId
@@ -42,13 +53,16 @@ class LetterAnnotation: MKPointAnnotation{
         
     }
     
-    init(active: ActiveLetter){
+    init(firebaseDict:Dictionary<String,String>){
         super.init()
-        self.objectId=active.objectId
-        self.coordinate=active.getCoordinate()
+        self.coordinate.latitude = Double(firebaseDict["lat"]!)!
+        self.coordinate.longitude = Double(firebaseDict["lon"]!)!
+        self.objectId = firebaseDict["oid"]!
         self.generateRandomLetter()
+        self.setOriginalCoords()
+        
+        
     }
-    
     
     init(objectId:String){
         super.init()
@@ -56,6 +70,34 @@ class LetterAnnotation: MKPointAnnotation{
         self.revertCoordinate()
         self.generateRandomLetter()
     }
+    
+    
+    func toDict() -> [String:String]{
+        var dict = Dictionary<String,String>()
+        self.generateFirebaseStrings()
+        dict["lat"] = String(self.coordinate.latitude)
+        dict["lon"] = String(self.coordinate.longitude)
+        dict["olat"] = String(self.original_latitude)
+        dict["olon"] = String(self.original_longitude)
+        dict["flat"] = String(self.firebase_lat_string)
+        dict["flon"] = String(self.firebase_lon_string)
+        dict["oid"] = self.objectId
+        return dict
+    }
+    
+    
+    func generateFirebaseStrings(){
+        self.firebase_lat_string=String(format: "%.2f", self.coordinate.latitude)
+        self.firebase_lat_string=self.firebase_lat_string.replacingOccurrences(of: ".", with: "_", options: .literal, range: nil)
+        self.firebase_lon_string=String(format: "%.2f", self.coordinate.longitude)
+        self.firebase_lon_string=self.firebase_lon_string.replacingOccurrences(of: ".", with: "_", options: .literal, range: nil)
+        self.firebase_olat_string=String(format: "%.2f", self.original_latitude)
+        self.firebase_olat_string=self.firebase_olat_string.replacingOccurrences(of: ".", with: "_", options: .literal, range: nil)
+        self.firebase_olon_string=String(format: "%.2f", self.original_longitude)
+        self.firebase_olon_string=self.firebase_olon_string.replacingOccurrences(of: ".", with: "_", options: .literal, range: nil)
+    }
+    
+    
     
     
     
@@ -81,7 +123,7 @@ class LetterAnnotation: MKPointAnnotation{
         
         anView!.alpha = self.getLetterOpacity(newWidth)
         anView!.layer.zPosition = self.getZPosition()
-
+        
 
         
         return anView!
@@ -97,18 +139,7 @@ class LetterAnnotation: MKPointAnnotation{
     func getLetterWidth( _ mapView: MKMapView) -> CGFloat{
         
         var pixels:CGFloat = 64.0
-        
-        //if UIDevice.current.model=="iPhone"{
-        //
-        //    pixels=32
-        //}
-        //else if UIDevice.current.model=="iPad"{
-        //pixels=50
-        //}
-        //else{
-        //    pixels=32
-        //}z
-        
+
         pixels=pixels/getZoomLevel(mapView)
         return pixels
         
@@ -150,7 +181,7 @@ class LetterAnnotation: MKPointAnnotation{
     
 
 
-
+    
 
 
     
@@ -158,17 +189,40 @@ class LetterAnnotation: MKPointAnnotation{
     func generateObjectId(){
         let shortentedLat=String(format: "%.3f", self.coordinate.latitude)
         let shortentedLon=String(format: "%.3f", self.coordinate.longitude)
-        self.objectId="\(shortentedLat)/\(shortentedLon)"
+        self.objectId="\(shortentedLat)&\(shortentedLon)"
+        self.objectId = self.objectId.replacingOccurrences(of: ".", with: "_", options: .literal, range: nil)
         
         
     }
     
     func revertCoordinate(){
-        let shortentedLat = CLLocationDegrees(self.objectId.components(separatedBy: "/")[0])
-        let shortentedLon = CLLocationDegrees(self.objectId.components(separatedBy: "/")[1])
+        let shortentedLat = CLLocationDegrees(self.objectId.components(separatedBy: "&")[0]
+                            .replacingOccurrences(of: "_", with: ".", options: .literal, range: nil))
+        let shortentedLon = CLLocationDegrees(self.objectId.components(separatedBy: "&")[1]
+                            .replacingOccurrences(of: "_", with: ".", options: .literal, range: nil))
+        
         self.coordinate.latitude = shortentedLat!
         self.coordinate.latitude = shortentedLon!
+        self.original_longitude = shortentedLon!
+        self.original_latitude = shortentedLat!
         self.generateRandomCoordShift()
+
+        
+    }
+    func start_hovering_on_map(map: MKMapView){
+        let selectedLetterXY = map.convert((self.coordinate), toPointTo: map.inputView)
+        let newSelectedLeterXY = CGPoint(x: selectedLetterXY.x, y: selectedLetterXY.y - getHoverHeight(map))
+        self.coordinate=map.convert(newSelectedLeterXY, toCoordinateFrom: map.inputView)
+        
+    }
+    func setOriginalCoords(){
+        let shortentedLat = CLLocationDegrees(self.objectId.components(separatedBy: "&")[0]
+            .replacingOccurrences(of: "_", with: ".", options: .literal, range: nil))
+        let shortentedLon = CLLocationDegrees(self.objectId.components(separatedBy: "&")[1]
+            .replacingOccurrences(of: "_", with: ".", options: .literal, range: nil))
+
+        self.original_longitude = shortentedLon!
+        self.original_latitude = shortentedLat!
         
     }
     
@@ -185,6 +239,7 @@ class LetterAnnotation: MKPointAnnotation{
         let lonShift: CLLocationDegrees = CLLocationDegrees ( randoms[0] * Double(LETTER_DENSITY)/2)
         self.coordinate.latitude = self.coordinate.latitude - CLLocationDegrees(LETTER_DENSITY)/4 + latShift
         self.coordinate.longitude = self.coordinate.longitude - CLLocationDegrees(LETTER_DENSITY)/4 + lonShift
+
     }
     
     func get_random_doubles(_ count: Int) -> [Double]{

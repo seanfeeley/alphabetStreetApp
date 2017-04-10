@@ -22,7 +22,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" mapType="standard" rotateEnabled="NO" pitchEnabled="NO" showsBuildings="NO" showsCompass="NO" showsPointsOfInterest="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3yn-Uf-koS">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" mapType="standard" rotateEnabled="NO" pitchEnabled="NO" showsBuildings="NO" showsCompass="NO" showsPointsOfInterest="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3yn-Uf-koS">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                             </mapView>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vNq-1j-hGo">
@@ -30,8 +30,8 @@
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="32" id="0RK-VQ-eP4"/>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="32" id="OUh-hP-M5I"/>
-                                    <constraint firstAttribute="height" constant="32" id="Rxa-dh-d5S"/>
-                                    <constraint firstAttribute="width" constant="32" id="hu5-hj-PQn"/>
+                                    <constraint firstAttribute="height" constant="64" id="Rxa-dh-d5S"/>
+                                    <constraint firstAttribute="width" constant="64" id="hu5-hj-PQn"/>
                                 </constraints>
                                 <state key="normal" image="location.png"/>
                                 <connections>
@@ -55,7 +55,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-726" y="174"/>
+            <point key="canvasLocation" x="-1011" y="148"/>
         </scene>
     </scenes>
     <resources>
