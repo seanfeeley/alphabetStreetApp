@@ -30,11 +30,28 @@ fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   }
 }
 
+extension UserDefaults {
+    // check for is first launch - only true on first invocation after app install, false on all further invocations
+    // Note: Store this value in AppDelegate if you have multiple places where you are checking for this flag
+    static func isFirstLaunch() -> Bool {
+        let hasBeenLaunchedBeforeFlag = "hasBeenLaunchedBeforeFlag"
+        let isFirstLaunch = !UserDefaults.standard.bool(forKey: hasBeenLaunchedBeforeFlag)
+        if (isFirstLaunch) {
+            UserDefaults.standard.set(true, forKey: hasBeenLaunchedBeforeFlag)
+            UserDefaults.standard.synchronize()
+        }
+        return isFirstLaunch
+    }
+}
 
 
 class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate,UIGestureRecognizerDelegate {
     
+
     @IBOutlet weak var map: MKMapView!
+    @IBOutlet weak var zoom_in_label: UITextField!
+    @IBOutlet weak var letter_inside_focus: UIImageView!
+    @IBOutlet weak var focus_ring: UIImageView!
 
     var currentUserLocation:CLLocation? = nil
     var centerPointAtLastPointLoad: CLLocation? = nil
@@ -53,7 +70,9 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         super.viewDidLoad()
         
         initaliseMap()
+
         
+
     }
     
     func initaliseMap(){
@@ -109,7 +128,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 
   
         self.refreshAnnotationResolutions()
-//        self.stopHovering()
+
         if self.map.annotations.count==0 && self.letterLoader.is_loading == false{
             
             self.placeLetterAnnotations()
@@ -165,7 +184,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
    
     
     func dropSelectedLetter(_ coord: CLLocationCoordinate2D){
-        
+        self.stop_spinning_focus()
         let selectedLetter = self.getSelectedLetter()
         
         if selectedLetter != nil{
@@ -246,32 +265,47 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 
     }
     
+    func start_spinning_focus(){
+        let selectedLetter = self.getSelectedLetter()
+        self.letter_inside_focus.image = UIImage(named:"letter_32_\(String(format: "%02d", (selectedLetter?.letterId)!)).png")!
+        
+        UIView.animate(withDuration: 0.25, delay: 0, options: [], animations: {
+            
+            self.focus_ring.alpha = 0.6
+            self.letter_inside_focus.alpha = 0.6
+            
+        }, completion: nil)
+        
+        UIView.animate(withDuration: 0.25, delay: 0, options: [.repeat,.curveLinear], animations: {
+            
+            self.focus_ring.transform = CGAffineTransform(rotationAngle: CGFloat(M_PI_4))
+            
+        }, completion: nil)
+    }
+    func stop_spinning_focus(){
+        self.focus_ring.layer.removeAllAnimations()
+        
+        UIView.animate(withDuration: 0.25, delay: 0, options: [], animations: {
+            self.focus_ring.alpha = 0.1
+            self.letter_inside_focus.alpha = 0
+            self.focus_ring.transform = CGAffineTransform(rotationAngle: CGFloat(0))
+        }, completion: nil)
+        
+    }
+    
+    
     func startHoveringSelectedLetter(){
+        self.start_spinning_focus()
         var selectedLetter = self.getSelectedLetter()
         selectedLetter?.isHovering=true
         self.refreshAnnotationResolutions()
         selectedLetter = self.getSelectedLetter()
         selectedLetter?.isHovering=true
         UIView.animate(withDuration: 0.2,  delay: 0, options: [.curveEaseOut],animations: {
-            
             selectedLetter!.start_hovering_on_map(map:self.map)
-//            let selectedLetterXY = self.map.convert((selectedLetter!.coordinate), toPointTo: self.map.inputView)
-//            let newSelectedLeterXY = CGPoint(x: selectedLetterXY.x, y: selectedLetterXY.y - getHoverHeight(self.map))
-//            selectedLetter!.coordinate=self.map.convert(newSelectedLeterXY, toCoordinateFrom: self.map.inputView)
             
         }, completion: { (completed) in
-            
-
-            
-            
         })
-
-           
-        
-        
-        
-
-        
         
         
     }
@@ -279,10 +313,10 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool){
-        print("start region did change")
+//        print("start region did change")
         self.locationHasChanged()
         self.regionHasChanged()
-        print("finish region did change")
+//        print("finish region did change")
         
         
     }
@@ -348,9 +382,11 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     func refreshAnnotationResolutions(){
         if (self.letterLoader.areLettersStillVisible()){
             
+            self.zoom_in_label.isHidden = true
             self.refreshVisibleAnnotationResolutions()
         }
         else{
+            self.zoom_in_label.isHidden = false
             self.fadeOutAllAnnotations()
             self.letterLoader.current_letters_on_screen = [:]
         }
@@ -435,6 +471,8 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
 
         centerMapToUserLocation()
         refreshVisibleAnnotationResolutions()
+        self.zoom_in_label.isHidden = true
+        
         
     }
 
@@ -462,6 +500,11 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         
         
         self.placeLetterAnnotations()
+
+        let isFirstLaunch = UserDefaults.isFirstLaunch()
+        if isFirstLaunch{
+            performSegue(withIdentifier: "show_help", sender: nil)
+        }
     }
     
     
@@ -478,6 +521,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             
         
         self.letterLoader.selectedObjectId = self.selectedObjectId
+        
         
         self.letterLoader.load_letters_via_firebase()
         

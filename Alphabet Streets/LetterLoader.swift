@@ -175,12 +175,12 @@
     func getFirebaseSearchAreaStrings() -> [(String,String)] {
         let topLeft: CLLocationCoordinate2D = self.randomLetterLoader.getMapTopLeftCoordinate()
         let bottomRight: CLLocationCoordinate2D = self.randomLetterLoader.getMapBottomRightCoordinate()
-        
+        print(topLeft.longitude,bottomRight.longitude)
         var latitudes: [String] = []
         var current_lat:CLLocationDegrees = bottomRight.latitude - 0.01
         let end_lat:CLLocationDegrees = topLeft.latitude + 0.01
         while current_lat < end_lat{
-            var lat_string = String(format: "%.2f", current_lat)
+            var lat_string = String(format: "%.2f", floor(current_lat*100)/100)
             lat_string=lat_string.replacingOccurrences(of: ".", with: "_", options: .literal, range: nil)
             latitudes.append(contentsOf: [lat_string])
             current_lat = current_lat + 0.01
@@ -190,7 +190,7 @@
         var current_lon:CLLocationDegrees = topLeft.longitude - 0.01
         let end_lon:CLLocationDegrees = bottomRight.longitude + 0.01
         while current_lon < end_lon{
-            var lon_string = String(format: "%.2f", current_lon)
+            var lon_string = String(format: "%.2f", floor(current_lon*100)/100)
             lon_string=lon_string.replacingOccurrences(of: ".", with: "_", options: .literal, range: nil)
             longitudes.append(contentsOf: [lon_string])
             current_lon = current_lon + 0.01
@@ -211,50 +211,61 @@
     
     
     func load_letters_via_firebase(){
-        //        print("start load_letters_via_firebase")
+        print("start load_letters_via_firebase")
+        
         self.detatch_old_location_observers()
-        DispatchQueue.global().async {
-            if self.is_loading == false{
-                self.is_loading = true
-                self.firebase_letter_oids_for_this_location.removeAll()
-                let relevant_database_slices = self.getFirebaseSearchAreaStrings()
-                for (lat,lon) in relevant_database_slices{
-                    
-                    self.ref.child("by_location")
-                        .child(lat)
-                        .child(lon)
-                        .observeSingleEvent(of: .value, with: { (snapshot) in
+        let firstGroup = DispatchGroup()
+        
+            
+        if self.is_loading == false{
+            self.is_loading = true
+            self.firebase_letter_oids_for_this_location.removeAll()
+            let relevant_database_slices = self.getFirebaseSearchAreaStrings()
+            print(relevant_database_slices.count)
+            
+            for (lat,lon) in relevant_database_slices{
+                
+                firstGroup.enter()
+                self.ref.child("by_location")
+                    .child(lat)
+                    .child(lon)
+                    .observeSingleEvent(of: .value, with: { (snapshot) in
+                        
+                        for child in snapshot.children{
                             
-                            
-                            for child in snapshot.children{
-                                self.firebase_letter_oids_for_this_location.append((child as! FIRDataSnapshot).key)
-                            }
-                            if (lat,lon) == relevant_database_slices.last!
-                            {
-                                self.load_letters()
-                            }
-                            
-                            
-                        }) { (error) in
-                            print(error.localizedDescription)
-                    }
-                    
-                    
+                            self.firebase_letter_oids_for_this_location.append((child as! FIRDataSnapshot).key)
+                          
+                        }
+                        firstGroup.leave()
+
+                        
+                    }) { (error) in
+                        print(error.localizedDescription)
                 }
+                
+                
             }
+            
+            
         }
         
-        //        print("finish load_letters_via_firebase")
+        firstGroup.notify(queue: DispatchQueue.main){
+            
+            self.load_letters()
+            
+            
+        }
+        
     }
     
     func load_letters(){
-        //        print("start load letter")
-        
-        let firstGroup = DispatchGroup()
+        print("start load letter")
+        print("firebase letters = \(self.firebase_letter_oids_for_this_location.count)")
+        let secondGroup = DispatchGroup()
         var letters_on_this_new_screen: [String:LetterAnnotation] = [:]
         for oid in self.firebase_letter_oids_for_this_location{
             
-            firstGroup.enter()
+            secondGroup.enter()
             
             self.ref.child("by_oid")
                 .child(oid)
@@ -268,13 +279,13 @@
                         }
                         
                     }
-                    firstGroup.leave()
+                    secondGroup.leave()
                 })
             
         }
         
         // called once all code blocks entered into group have left
-        firstGroup.notify(queue: DispatchQueue.main){
+        secondGroup.notify(queue: DispatchQueue.main){
             
             //            print("finished")
             let randomletters = self.randomLetterLoader.getAutoGeneratedLetters()
@@ -313,9 +324,10 @@
     }
     func add_letter_annotation(_ letter: LetterAnnotation){
         
+        
         if letter.objectId == self.selectedObjectId{
             let hover_letter = HoverAnnotation(letter: letter)
-            hover_letter.animate_in = true
+            //            hover_letter.animate_in = true
             self.map.addAnnotation(hover_letter)
             
         }
@@ -324,7 +336,11 @@
         self.current_letters_on_screen[letter.objectId] = letter
         
         if letter.objectId == self.selectedObjectId{
+            self.map.removeAnnotation(letter)
+            letter.animate_in = false
+            self.map.addAnnotation(letter)
             letter.start_hovering_on_map(map: self.map)
+            
         }
         
     }

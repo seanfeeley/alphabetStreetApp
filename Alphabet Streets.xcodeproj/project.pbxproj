@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		2190B98FF1902C0E3F6C35B9 /* Pods_Alphabet_Streets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 083BD0890626B98D0041E5D6 /* Pods_Alphabet_Streets.framework */; };
+		560230AC1EA5538B0031A3F7 /* fade_title_image.png in Resources */ = {isa = PBXBuildFile; fileRef = 560230AB1EA5538B0031A3F7 /* fade_title_image.png */; };
+		560230AE1EA568550031A3F7 /* help_screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560230AD1EA568550031A3F7 /* help_screen.swift */; };
+		560230B01EA579310031A3F7 /* 000-arrows.png in Resources */ = {isa = PBXBuildFile; fileRef = 560230AF1EA579310031A3F7 /* 000-arrows.png */; };
 		56049D791E75EB8A00AB898B /* Pods_Alphabet_Streets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56049D781E75EB8A00AB898B /* Pods_Alphabet_Streets.framework */; };
 		56049D9D1E75FB6100AB898B /* ShadowLetterAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56049D9C1E75FB6100AB898B /* ShadowLetterAnnotation.swift */; };
 		563FEA271E83260600CA7FB0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 563FEA261E83260600CA7FB0 /* GoogleService-Info.plist */; };
@@ -209,6 +212,7 @@
 		569ACC451D3C2C5800B11BA2 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 569ACC401D3C2C0900B11BA2 /* libsqlite3.tbd */; };
 		569ACC471D3C2CB200B11BA2 /* libstdc++.6.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 569ACC461D3C2CB200B11BA2 /* libstdc++.6.tbd */; };
 		569ACC491D3C2CCB00B11BA2 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 569ACC481D3C2CCB00B11BA2 /* AudioToolbox.framework */; };
+		56A131D91E9D6A9A00760FCB /* round.png in Resources */ = {isa = PBXBuildFile; fileRef = 56A131D81E9D6A9A00760FCB /* round.png */; };
 		56B05A011DCBE66F0026BF9D /* LetterAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B05A001DCBE66F0026BF9D /* LetterAnnotation.swift */; };
 		56B730CD1DD12C4B008905E9 /* settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56B730CC1DD12C4B008905E9 /* settings.swift */; };
 		56B9025D1DE7ADE00053B156 /* hover_letter_16_25.png in Resources */ = {isa = PBXBuildFile; fileRef = 56B901A71DE7ADDF0053B156 /* hover_letter_16_25.png */; };
@@ -397,6 +401,9 @@
 
 /* Begin PBXFileReference section */
 		083BD0890626B98D0041E5D6 /* Pods_Alphabet_Streets.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Alphabet_Streets.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		560230AB1EA5538B0031A3F7 /* fade_title_image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fade_title_image.png; sourceTree = "<group>"; };
+		560230AD1EA568550031A3F7 /* help_screen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = help_screen.swift; sourceTree = "<group>"; };
+		560230AF1EA579310031A3F7 /* 000-arrows.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "000-arrows.png"; sourceTree = "<group>"; };
 		56049D781E75EB8A00AB898B /* Pods_Alphabet_Streets.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = Pods_Alphabet_Streets.framework; path = "/Users/feeley19/coding/projects/Learning iOS Development/AlphabetStreets/build/Debug-iphoneos/Pods_Alphabet_Streets.framework"; sourceTree = "<absolute>"; };
 		56049D9C1E75FB6100AB898B /* ShadowLetterAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShadowLetterAnnotation.swift; sourceTree = "<group>"; };
 		563FEA261E83260600CA7FB0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -600,6 +607,7 @@
 		569ACC401D3C2C0900B11BA2 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		569ACC461D3C2CB200B11BA2 /* libstdc++.6.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.tbd"; path = "usr/lib/libstdc++.6.tbd"; sourceTree = SDKROOT; };
 		569ACC481D3C2CCB00B11BA2 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		56A131D81E9D6A9A00760FCB /* round.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = round.png; path = ../../../../../../Downloads/round.png; sourceTree = "<group>"; };
 		56B05A001DCBE66F0026BF9D /* LetterAnnotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LetterAnnotation.swift; sourceTree = "<group>"; };
 		56B730CC1DD12C4B008905E9 /* settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = settings.swift; sourceTree = "<group>"; };
 		56B901A71DE7ADDF0053B156 /* hover_letter_16_25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hover_letter_16_25.png; sourceTree = "<group>"; };
@@ -863,6 +871,7 @@
 				56049D9A1E75F90600AB898B /* LetterClasses */,
 				569ACC4A1D3C58BF00B11BA2 /* alphabetImages */,
 				569ACC191D3C1F0100B11BA2 /* AppDelegate.swift */,
+				56A131DA1E9D749700760FCB /* help */,
 				569ACC1B1D3C1F0100B11BA2 /* ViewController.swift */,
 				56B730CC1DD12C4B008905E9 /* settings.swift */,
 				569ACC171D3C1F0100B11BA2 /* Products */,
@@ -890,6 +899,9 @@
 		569ACC4A1D3C58BF00B11BA2 /* alphabetImages */ = {
 			isa = PBXGroup;
 			children = (
+				560230AF1EA579310031A3F7 /* 000-arrows.png */,
+				560230AB1EA5538B0031A3F7 /* fade_title_image.png */,
+				56A131D81E9D6A9A00760FCB /* round.png */,
 				56B901A71DE7ADDF0053B156 /* hover_letter_16_25.png */,
 				56B901A81DE7ADDF0053B156 /* hover_letter_16_23.png */,
 				56B901A91DE7ADDF0053B156 /* hover_letter_16_24.png */,
@@ -1260,6 +1272,14 @@
 			path = alphabetImages;
 			sourceTree = "<group>";
 		};
+		56A131DA1E9D749700760FCB /* help */ = {
+			isa = PBXGroup;
+			children = (
+				560230AD1EA568550031A3F7 /* help_screen.swift */,
+			);
+			name = help;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1401,6 +1421,7 @@
 				56B902AB1DE7ADE00053B156 /* hover_letter_128_25.png in Resources */,
 				56738EED1DC944C20022C009 /* letter_512_03.png in Resources */,
 				56738ED11DC944C20022C009 /* letter_256_01.png in Resources */,
+				56A131D91E9D6A9A00760FCB /* round.png in Resources */,
 				56B902AF1DE7ADE00053B156 /* hover_letter_128_22.png in Resources */,
 				56738E741DC944C10022C009 /* letter_16_12.png in Resources */,
 				56738F191DC944C20022C009 /* letter_1024_21.png in Resources */,
@@ -1601,6 +1622,7 @@
 				56738EA41DC944C20022C009 /* letter_64_08.png in Resources */,
 				56738EA01DC944C20022C009 /* letter_64_04.png in Resources */,
 				56B902E91DE7ADE00053B156 /* hover_letter_512_15.png in Resources */,
+				560230AC1EA5538B0031A3F7 /* fade_title_image.png in Resources */,
 				56738E831DC944C10022C009 /* letter_32_01.png in Resources */,
 				56738F0E1DC944C20022C009 /* letter_1024_10.png in Resources */,
 				56B9027D1DE7ADE00053B156 /* hover_letter_32_18.png in Resources */,
@@ -1666,6 +1688,7 @@
 				56B902E81DE7ADE00053B156 /* hover_letter_512_17.png in Resources */,
 				56738E701DC944C10022C009 /* letter_16_08.png in Resources */,
 				56B903051DE7ADE10053B156 /* hover_letter_1024_14.png in Resources */,
+				560230B01EA579310031A3F7 /* 000-arrows.png in Resources */,
 				56B9026F1DE7ADE00053B156 /* hover_letter_16_07.png in Resources */,
 				56738E9A1DC944C20022C009 /* letter_32_24.png in Resources */,
 				56B902CA1DE7ADE00053B156 /* hover_letter_256_21.png in Resources */,
@@ -1760,6 +1783,7 @@
 				5686B2F91DFA433900169657 /* LetterLoader.swift in Sources */,
 				5686B2F51DF784BF00169657 /* RemoteLetterLoader.swift in Sources */,
 				56B05A011DCBE66F0026BF9D /* LetterAnnotation.swift in Sources */,
+				560230AE1EA568550031A3F7 /* help_screen.swift in Sources */,
 				56B730CD1DD12C4B008905E9 /* settings.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

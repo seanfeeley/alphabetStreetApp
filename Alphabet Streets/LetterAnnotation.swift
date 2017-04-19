@@ -179,13 +179,6 @@ class LetterAnnotation: MKPointAnnotation{
         return newImage!
     }
     
-
-
-    
-
-
-    
-
     func generateObjectId(){
         let shortentedLat=String(format: "%.3f", self.coordinate.latitude)
         let shortentedLon=String(format: "%.3f", self.coordinate.longitude)
@@ -213,6 +206,7 @@ class LetterAnnotation: MKPointAnnotation{
         let selectedLetterXY = map.convert((self.coordinate), toPointTo: map.inputView)
         let newSelectedLeterXY = CGPoint(x: selectedLetterXY.x, y: selectedLetterXY.y - getHoverHeight(map))
         self.coordinate=map.convert(newSelectedLeterXY, toCoordinateFrom: map.inputView)
+        self.isHovering = true
         
     }
     func setOriginalCoords(){
@@ -229,7 +223,14 @@ class LetterAnnotation: MKPointAnnotation{
     
     
     func generateRandomLetter(){
-        self.letterId = UInt32( get_random_doubles(1)[0] * 26 )
+        let letter_dist:[UInt32] = [0, 0, 0, 1, 2, 3, 3,
+                                    4, 4, 4, 5, 6, 7, 8,
+                                    8, 9,10,11,12,12,13,
+                                   13,14,14,15,15,16,17,
+                                   17,18,18,19,19,20,20,
+                                   21,22,23,24,25]
+        let random_from_dist_index:Int  = Int(get_random_doubles(1)[0] * Double(letter_dist.count))
+        self.letterId = letter_dist[random_from_dist_index]
         
     }
     
@@ -266,7 +267,7 @@ class LetterAnnotation: MKPointAnnotation{
             middle_int = Int(middle_string as String)!
         }
         let middle_double:Double = Double(middle_int)
-//        print("\(number) -> \(squared) -> \(squared_string) -> \(middle_string) -> \(middle_int) -> \(middle_double)")
+
         return middle_double
     }
 

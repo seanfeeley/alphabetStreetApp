@@ -11,10 +11,10 @@ import MapKit
 
 let LETTER_WIDTH: CGFloat = 15
 let HOVER_HEIGHT: CGFloat = 30
-let ZOOM_CUT_OFF: CGFloat = 3
+let ZOOM_CUT_OFF: CGFloat = 4
 let RESOLUTION: CLLocationDegrees = 1000.0
 let LETTER_DENSITY: CGFloat = CGFloat(RESOLUTION)/1000000
-let ZOOM_DISTANCE: CLLocationDegrees = 8/RESOLUTION
+let ZOOM_DISTANCE: CLLocationDegrees = 7/RESOLUTION
 let METERS_BETWEEN_LOADS: CGFloat = 75
 
 
